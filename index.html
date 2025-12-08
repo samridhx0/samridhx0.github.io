@@ -287,8 +287,9 @@
         (function() {
             const RSS_URL = 'https://sxmridh.substack.com/feed';
             const container = document.getElementById('latest-post');
-            const CACHE_KEY = 'substack-latest-cache-v1';
-            const CACHE_TTL = 1000 * 60 * 30; // 30 minutes
+            const CACHE_KEY = 'substack-latest-cache-v2';
+            const CACHE_FRESH_TTL = 1000 * 60 * 30; // 30 minutes - fresh cache
+            const CACHE_STALE_TTL = 1000 * 60 * 60 * 24 * 7; // 7 days - stale but usable
             const SOURCES = [
                 RSS_URL,
                 'https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS_URL) + '&timestamp=' + Date.now(),
@@ -309,13 +310,19 @@
             function readCache() {
                 try {
                     const raw = localStorage.getItem(CACHE_KEY);
-                    if (!raw) return null;
+                    if (!raw) return { xml: null, isFresh: false, isStale: false };
                     const cached = JSON.parse(raw);
-                    if (!cached?.timestamp || Date.now() - cached.timestamp > CACHE_TTL) return null;
-                    return cached.xml || null;
+                    if (!cached?.timestamp || !cached?.xml) return { xml: null, isFresh: false, isStale: false };
+                    
+                    const age = Date.now() - cached.timestamp;
+                    const isFresh = age <= CACHE_FRESH_TTL;
+                    const isStale = age > CACHE_FRESH_TTL && age <= CACHE_STALE_TTL;
+                    
+                    if (age > CACHE_STALE_TTL) return { xml: null, isFresh: false, isStale: false };
+                    return { xml: cached.xml, isFresh, isStale };
                 } catch (err) {
                     console.warn('Failed to read cache', err);
-                    return null;
+                    return { xml: null, isFresh: false, isStale: false };
                 }
             }
 
@@ -327,7 +334,7 @@
                 }
             }
 
-            async function fetchWithTimeout(url, options = {}, timeout = 6000) {
+            async function fetchWithTimeout(url, options = {}, timeout = 8000) {
                 const controller = new AbortController();
                 const timer = setTimeout(() => controller.abort(), timeout);
                 try {
@@ -335,21 +342,32 @@
                     clearTimeout(timer);
                     if (!res.ok) throw new Error('Request failed: ' + res.status);
                     return await res.text();
-                } finally {
+                } catch (err) {
                     clearTimeout(timer);
+                    throw err;
                 }
             }
 
-            async function fetchRSS() {
+            async function fetchRSS(retries = 2) {
                 let lastErr = null;
-                for (const url of SOURCES) {
-                    try {
-                        return await fetchWithTimeout(url, { headers: { 'Accept': 'application/rss+xml,text/xml;q=0.9,*/*;q=0.8' } });
-                    } catch (err) {
-                        lastErr = err;
+                for (let attempt = 0; attempt <= retries; attempt++) {
+                    for (const url of SOURCES) {
+                        try {
+                            const xml = await fetchWithTimeout(url, { 
+                                headers: { 'Accept': 'application/rss+xml,text/xml;q=0.9,*/*;q=0.8' } 
+                            });
+                            return xml;
+                        } catch (err) {
+                            lastErr = err;
+                            console.warn(`Fetch attempt ${attempt + 1} failed for ${url}:`, err.message);
+                        }
+                    }
+                    // Wait before retry with exponential backoff
+                    if (attempt < retries) {
+                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
                     }
                 }
-                throw lastErr || new Error('Failed to fetch RSS');
+                throw lastErr || new Error('Failed to fetch RSS after retries');
             }
 
             function parseLatest(xmlText) {
@@ -413,15 +431,21 @@
             }
 
             (async function initLatest() {
-                const cachedXml = readCache();
-                if (cachedXml) {
+                const cache = readCache();
+                
+                // Stale-while-revalidate: Always show cached content immediately if available
+                if (cache.xml) {
                     try {
-                        const cachedPost = parseLatest(cachedXml);
+                        const cachedPost = parseLatest(cache.xml);
                         render(cachedPost);
+                        console.log(cache.isFresh ? 'Showing fresh cached post' : 'Showing stale cached post');
                     } catch (err) {
                         console.warn('Failed to render cached post', err);
                     }
-                } else {
+                }
+                
+                // If no cache or cache is stale, show loading state
+                if (!cache.xml) {
                     container.innerHTML = `
                         <div class="flex justify-center">
                             <span class="loading-pill">
@@ -433,16 +457,21 @@
                         </div>`;
                 }
 
-                try {
-                    const xml = await fetchRSS();
-                    writeCache(xml);
-                    const post = parseLatest(xml);
-                    render(post);
-                } catch (e) {
-                    if (!cachedXml) {
-                        container.innerHTML = '<div class="text-sm text-red-600">Failed to load latest Substack post.</div>';
+                // Always try to fetch fresh data if cache is not fresh
+                if (!cache.isFresh) {
+                    try {
+                        const xml = await fetchRSS();
+                        writeCache(xml);
+                        const post = parseLatest(xml);
+                        render(post);
+                        console.log('Updated with fresh post from Substack');
+                    } catch (e) {
+                        // If fetch fails and we have no cache, show error
+                        if (!cache.xml) {
+                            container.innerHTML = '<div class="text-sm text-red-600">Unable to load post. Please check your connection and try again.</div>';
+                        }
+                        console.error('Failed to fetch fresh post:', e);
                     }
-                    console.error(e);
                 }
             })();
         })();

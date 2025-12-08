@@ -215,12 +215,12 @@
     const timer = setTimeout(() => controller.abort(), timeout);
     try {
       const res = await fetch(url, { ...options, signal: controller.signal });
-      clearTimeout(timer);
       if (!res.ok) throw new Error('Request failed: ' + res.status);
       return await res.text();
     } catch (err) {
-      clearTimeout(timer);
       throw err;
+    } finally {
+      clearTimeout(timer);
     }
   }
 

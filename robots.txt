@@ -1,0 +1,4 @@
+User-agent: *
+# Disallow crawling entirely. Note: search engines may still index if URLs are linked elsewhere; combine with meta/headers noindex (already added) for maximum effect.
+Disallow: /
+

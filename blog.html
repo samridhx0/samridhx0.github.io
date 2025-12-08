@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- Strictly prevent indexing/caching by crawlers -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>Blog - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+  </script>
+<style>
+  .dark .dark-mode-toggle .material-icons { content: "dark_mode"; }
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-card { position: relative; }
+  .post-meta { font-family: monospace; }
+  .name-highlight { color: inherit; }
+  .loading-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 3px solid currentColor;
+    border-radius: 9999px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .loading-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0.25;
+    animation: pulse 1.2s infinite ease-in-out;
+  }
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.25; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.35); }
+  }
+  .card-link-cta {
+    position: relative;
+    padding: 4px 0;
+  }
+  .card-link-cta::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 3px;
+    bottom: -3px;
+    left: 0;
+    background-color: currentColor;
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+  }
+  .group:hover .card-link-cta::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="index.html">home</a>
+      <a class="text-xl brutalist-link" href="blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="mb-16 sm:mb-20 text-center sm:text-left">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl uppercase font-bold text-black dark:text-white mb-4 leading-none">Blog</h1>
+      <p class="text-xl sm:text-2xl text-black dark:text-white uppercase font-bold max-w-3xl mx-auto sm:mx-0">Insights, notes, and deep dives on building, tech, and strategy.</p>
+    </section>
+
+    <section class="mb-16 sm:mb-20">
+      <h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">Latest Posts</h2>
+
+      <div id="posts" class="space-y-6 sm:space-y-8"></div>
+    </section>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+
+<script>
+  // Substack RSS integration
+  const RSS_URL = 'https://sxmridh.substack.com/feed';
+  const postsEl = document.getElementById('posts');
+  const CACHE_KEY = 'substack-feed-cache-v1';
+  const CACHE_TTL = 1000 * 60 * 30; // 30 minutes
+  const SOURCES = [
+    RSS_URL,
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS_URL) + '&timestamp=' + Date.now(),
+    'https://r.jina.ai/' + RSS_URL
+  ];
+
+  function escapeHtml(str) {
+    return (str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function readCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const cached = JSON.parse(raw);
+      if (!cached?.timestamp || Date.now() - cached.timestamp > CACHE_TTL) return null;
+      return cached.xml || null;
+    } catch (err) {
+      console.warn('Failed to read cache', err);
+      return null;
+    }
+  }
+
+  function writeCache(xml) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ xml, timestamp: Date.now() }));
+    } catch (err) {
+      console.warn('Failed to store cache', err);
+    }
+  }
+
+  async function fetchWithTimeout(url, options = {}, timeout = 6000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const res = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error('Request failed: ' + res.status);
+      return await res.text();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function fetchRSS() {
+    let lastErr = null;
+    for (const url of SOURCES) {
+      try {
+        return await fetchWithTimeout(url, { headers: { 'Accept': 'application/rss+xml, text/xml;q=0.9,*/*;q=0.8' } });
+      } catch (err) {
+        lastErr = err;
+      }
+    }
+    throw lastErr || new Error('Failed to fetch RSS');
+  }
+
+  function parseItems(xmlText, limit = 6) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlText, 'application/xml');
+    const items = Array.from(doc.querySelectorAll('item')).slice(0, limit);
+    return items.map(item => {
+      const title = item.querySelector('title')?.textContent?.trim() || 'Untitled';
+      const link = item.querySelector('link')?.textContent?.trim() || '#';
+      const pubDate = item.querySelector('pubDate')?.textContent || '';
+      const description = item.querySelector('description')?.textContent || '';
+      const content = item.querySelector('content\\:encoded')?.textContent || description;
+      let image = null;
+      const imgMatch = content && content.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (imgMatch) image = imgMatch[1];
+      if (!image) {
+        const media = item.querySelector('media\\:content, media\\:thumbnail');
+        if (media) image = media.getAttribute('url');
+      }
+      if (!image) {
+        const enclosure = item.querySelector('enclosure');
+        if (enclosure) image = enclosure.getAttribute('url');
+      }
+      return { title, link, pubDate, image };
+    });
+  }
+
+  function formatDate(pubDate) {
+    const d = new Date(pubDate);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: '2-digit' }).toUpperCase();
+  }
+
+  function render(posts) {
+    postsEl.innerHTML = '';
+    if (!posts.length) {
+      postsEl.innerHTML = '<div class="text-sm text-gray-500 dark:text-gray-400">No posts found.</div>';
+      return;
+    }
+    posts.forEach(p => {
+      const hasImage = !!p.image;
+      const imgBlock = hasImage ? `
+        <div class="md:col-span-2">
+          <div class="brutalist-border overflow-hidden pointer-events-none">
+            <img src="${escapeHtml(p.image)}" alt="" class="object-cover w-full h-40 sm:h-48 md:h-full"/>
+          </div>
+        </div>` : '';
+
+      const textColClass = hasImage ? 'md:col-span-3' : 'md:col-span-5';
+      const card = document.createElement('a');
+      card.className = 'post-card group block p-6 sm:p-8 brutalist-border text-black dark:text-white';
+      card.href = p.link;
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+      card.innerHTML = `
+        <div class="grid md:grid-cols-5 gap-6 sm:gap-8 items-start">
+          ${imgBlock}
+          <div class="${textColClass} space-y-4 sm:space-y-5">
+            <p class="post-meta text-sm">${escapeHtml(formatDate(p.pubDate))}</p>
+            <h3 class="text-2xl sm:text-3xl uppercase font-bold">${escapeHtml(p.title)}</h3>
+            <span class="inline-flex items-center gap-2 text-base sm:text-lg card-link-cta">Read on Substack →</span>
+          </div>
+        </div>`;
+      postsEl.appendChild(card);
+    });
+  }
+
+  async function initFeed() {
+    const cachedXml = readCache();
+    if (cachedXml) {
+      try {
+        const cachedPosts = parseItems(cachedXml, 6);
+        render(cachedPosts);
+      } catch (err) {
+        console.warn('Failed to render cached posts', err);
+      }
+    } else {
+      postsEl.innerHTML = `
+        <div class="flex justify-center">
+          <span class="loading-pill">
+            <span class="loading-dot"></span>
+            <span class="loading-dot"></span>
+            <span class="loading-dot"></span>
+            THINKING
+          </span>
+        </div>`;
+    }
+
+    try {
+      const xml = await fetchRSS();
+      writeCache(xml);
+      const posts = parseItems(xml, 6);
+      render(posts);
+    } catch (e) {
+      if (!cachedXml) {
+        postsEl.innerHTML = '<div class="text-sm text-red-600">Failed to load Substack posts.</div>';
+      }
+      console.error(e);
+    }
+  }
+
+  initFeed();
+</script>
+
+</body></html>

@@ -217,8 +217,6 @@
       const res = await fetch(url, { ...options, signal: controller.signal });
       if (!res.ok) throw new Error('Request failed: ' + res.status);
       return await res.text();
-    } catch (err) {
-      throw err;
     } finally {
       clearTimeout(timer);
     }
@@ -230,7 +228,7 @@
       for (const url of SOURCES) {
         try {
           const xml = await fetchWithTimeout(url, { 
-            headers: { 'Accept': 'application/rss+xml, text/xml;q=0.9,*/*;q=0.8' } 
+            headers: { 'Accept': 'application/rss+xml,text/xml;q=0.9,*/*;q=0.8' } 
           });
           return xml;
         } catch (err) {

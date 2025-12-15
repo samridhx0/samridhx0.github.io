@@ -1,477 +1,339 @@
 <!DOCTYPE html>
-
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<!-- Strictly prevent indexing/caching by crawlers -->
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
-<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
-<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
-<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
-<title>Home - Samridh Gaur</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-<script>tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#019863", "background-light": "#f5f8f7", "background-dark": "#0f231c", "text-light": "#111111", "text-dark": "#e5e7eb", "text-secondary-light": "#6b7280", "text-secondary-dark": "#9ca3af", "border-light": "#e5e7eb", "border-dark": "#2d2d2d"}, fontFamily: {sans: ["Inter", "sans-serif"], display: "Manrope"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}}}};</script>
-<style>
-        .dark .dark-mode-toggle .material-icons {
-            content: "dark_mode";
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate">
+    <title>Home - Samridh Gaur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+
         body {
-            font-family: 'Arial Black', sans-serif;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #111;
+            background-color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #111;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #111;
+        }
+
+        .logo span {
+            color: #019863;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #111;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 5px 0;
+            border-bottom: 3px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        nav a:hover {
+            border-bottom-color: #111;
+        }
+
+        h1 {
+            font-size: 48px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 15px;
             letter-spacing: -1px;
         }
-        h1, h2, h3 {
-            font-family: 'Arial Black', sans-serif;
-            letter-spacing: -2px;
-        }
-        .brutalist-border {
-            border: 3px solid currentColor;
-        }
-        .brutalist-link {
-            text-decoration: none;
-            color: currentColor;
-            padding: 4px 0;
-            position: relative;
-        }
-        .brutalist-link::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 3px;
-            bottom: -3px;
-            left: 0;
-            background-color: currentColor;
-            transform-origin: bottom right;
-            transition: transform 0.3s ease-out;
-        }
-        .brutalist-link:hover::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
-        .brutalist-button {
-            border: 3px solid currentColor;
-            padding: 8px 16px;
-            background-color: transparent;
-            color: currentColor;
-            transition: all 0.2s ease-in-out;
-        }
-        .brutalist-button:hover {
-            background-color: currentColor;
-            color: var(--background-light);}
-        .dark .brutalist-button:hover {
-            background-color: currentColor;
-            color: var(--background-dark);
-        }
-        .project-card {
-            position: relative;
-            overflow: hidden;
-        }
-        .project-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -150%;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0) 100%);
-            transform: skewX(-20deg);
-            opacity: 0;
-            pointer-events: none;
-        }
-        .project-card:hover::before {
-            animation: shine-slide 0.9s ease-out forwards;
-            opacity: 1;
-        }
-        @keyframes shine-slide {
-            from {
-                left: -150%;
-            }
-            to {
-                left: 150%;
-            }
-        }
-        .name-highlight {
-            color: inherit;
-        }
-        .loading-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            border: 3px solid currentColor;
-            border-radius: 9999px;
-            padding: 0.5rem 1.25rem;
-            font-size: 0.875rem;
-            letter-spacing: 0.2em;
+
+        h2 {
+            font-size: 36px;
             text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
         }
-        .loading-dot {
-            width: 0.5rem;
-            height: 0.5rem;
-            border-radius: 9999px;
-            background: currentColor;
-            opacity: 0.25;
-            animation: pulse 1.2s infinite ease-in-out;
+
+        h3 {
+            font-size: 24px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
-        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.25; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.35); }
+
+        .subtitle {
+            font-size: 24px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 40px;
         }
-        .card-link-cta {
-            position: relative;
-            padding: 4px 0;
+
+        section {
+            margin-bottom: 60px;
         }
-        .card-link-cta::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 3px;
-            bottom: -3px;
-            left: 0;
-            background-color: currentColor;
-            transform-origin: bottom right;
-            transition: transform 0.3s ease-out;
+
+        .intro p {
+            font-size: 20px;
+            margin-bottom: 20px;
         }
-        .group:hover .card-link-cta::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
+
+        .project-card {
+            border: 3px solid #111;
+            padding: 30px;
+            margin-bottom: 25px;
+            text-decoration: none;
+            color: #111;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .project-card:hover {
+            background-color: #f5f5f5;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .project-year {
+            border: 3px solid #111;
+            padding: 5px 15px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .project-card p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .project-link {
+            font-size: 16px;
+            color: #111;
+        }
+
+        .contact-box {
+            border: 3px solid #111;
+            padding: 30px;
+        }
+
+        .contact-box p {
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+
+        .email {
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+
+        .email a {
+            color: #111;
+            text-decoration: none;
+            border-bottom: 3px solid transparent;
+            padding-bottom: 2px;
+            transition: border-color 0.3s;
+        }
+
+        .email a:hover {
+            border-bottom-color: #111;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            color: #111;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: 80px;
+            padding: 20px;
+            border: 3px solid #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        footer span {
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 20px;
+            }
+
+            .intro p {
+                font-size: 18px;
+            }
+
+            nav {
+                gap: 20px;
+            }
+
+            footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
-<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
-<header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
-<a class="text-xl font-bold brutalist-link" href="#">samridh.com<span class="text-primary">~</span></a>
-<div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
-<a class="text-xl brutalist-link" href="index2.html">home</a>
-<a class="text-xl brutalist-link" href="blog.html">blog</a>
-<a class="text-xl brutalist-link" href="#">resume</a>
-<button class="text-black dark:text-white brutalist-button text-2xl p-2" id="theme-toggle">
-<span class="material-icons text-xl">wb_sunny</span>
-</button>
-</div>
-</header>
-<main>
-<section class="mb-16 sm:mb-20 text-center sm:text-left">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl uppercase font-bold text-black dark:text-white mb-4 leading-none"><span class="name-highlight">Samridh Gaur</span></h1>
-<p class="text-xl sm:text-2xl text-black dark:text-white uppercase font-bold">AI + Security Enthusiast</p>
-</section>
-<section class="mb-16 sm:mb-20 text-lg sm:text-2xl text-black dark:text-white space-y-6 max-w-3xl mx-auto sm:mx-0 text-center sm:text-left">
-<p>Passionate about learning, building products and strategies in emerging technologies.</p>
-<p>Currently looking for opportunities.</p>
-<p>TBA</p>
-</section>
-<section class="mb-16 sm:mb-20">
-<h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">Latest Post</h2>
-<div id="latest-post"></div>
-</section>
-<section class="mb-16 sm:mb-20">
-<h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">Projects</h2>
-<div class="space-y-6 sm:space-y-8">
-            <!-- With links first -->
-            <a class="project-card group block p-6 sm:p-8 brutalist-border text-black dark:text-white" href="https://talkativelogs.onrender.com" target="_blank" rel="noopener noreferrer">
-<div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-4 sm:mb-3">
-<h3 class="text-2xl sm:text-3xl uppercase font-bold">Talkative Logs</h3>
-<span class="brutalist-border text-xs uppercase px-4 py-1 font-bold">2025</span>
-</div>
-<p class="text-base sm:text-lg mb-6">Copilot-style log assistant with function-calling + RAG (LangChain + FAISS) to answer queries over uploaded docs/logs. Designed prompts, grounding, guardrails, and monitoring for response time and token costs; improved latency via streaming and smaller context windows.</p>
-<span class="inline-flex items-center gap-2 text-base sm:text-lg card-link-cta">talkativelogs.onrender.com</span>
-</a>
-            <a class="project-card group block p-6 sm:p-8 brutalist-border text-black dark:text-white" href="https://github.com/samridhx0/PURRRGE" target="_blank" rel="noopener noreferrer">
-<div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-4 sm:mb-3">
-<h3 class="text-2xl sm:text-3xl uppercase font-bold">PURRRGE</h3>
-<span class="brutalist-border text-xs uppercase px-4 py-1 font-bold">2025</span>
-</div>
-<p class="text-base sm:text-lg mb-6">Secure deletion, cleaning free space, and zeroing disks - safer and more discoverable - while preserving the full power of the SDelete CLI.</p>
-<span class="inline-flex items-center gap-2 text-base sm:text-lg card-link-cta">github.com/samridhx0/PURRRGE</span>
-</a>
-            <a class="project-card group block p-6 sm:p-8 brutalist-border text-black dark:text-white" href="https://github.com/samridhx0/adb-plus" target="_blank" rel="noopener noreferrer">
-<div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-4 sm:mb-3">
-<h3 class="text-2xl sm:text-3xl uppercase font-bold">Adb-Plus</h3>
-<span class="brutalist-border text-xs uppercase px-4 py-1 font-bold">2025</span>
-</div>
-<p class="text-base sm:text-lg mb-6">Streamlines everyday Android workflows: manage apps, run shell commands, launch screen mirroring (scrcpy), and generate forensic-style snapshots for triage and documentation.</p>
-<span class="inline-flex items-center gap-2 text-base sm:text-lg card-link-cta">github.com/samridhx0/adb-plus</span>
-</a>
-            <!-- Then the rest without links -->
-            <div class="project-card p-6 sm:p-8 brutalist-border">
-<div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-4 sm:mb-3">
-<h3 class="text-2xl sm:text-3xl uppercase font-bold text-black dark:text-white">Emergency vs. Non-Emergency Vehicle Classifier</h3>
-<span class="brutalist-border text-xs uppercase px-4 py-1 font-bold">2024</span>
-</div>
-<p class="text-base sm:text-lg text-black dark:text-white mb-4">Deep learning classifier leveraging Grad-CAMs to distinguish emergency vs. non-emergency vehicles.</p>
-</div>
-            <div class="project-card p-6 sm:p-8 brutalist-border">
-<div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-4 sm:mb-3">
-<h3 class="text-2xl sm:text-3xl uppercase font-bold text-black dark:text-white">Deep Psychographics in Marketing</h3>
-<span class="brutalist-border text-xs uppercase px-4 py-1 font-bold">2023</span>
-</div>
-<p class="text-base sm:text-lg text-black dark:text-white mb-4">Research on using the OCEAN (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) model to enhance consumer engagement and targeting strategies.</p>
-</div>
-            <div class="project-card p-6 sm:p-8 brutalist-border">
-<div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-4 sm:mb-3">
-<h3 class="text-2xl sm:text-3xl uppercase font-bold text-black dark:text-white">CyTriage Malware Forensics Tool</h3>
-<span class="brutalist-border text-xs uppercase px-4 py-1 font-bold">2024</span>
-</div>
-<p class="text-base sm:text-lg text-black dark:text-white mb-4">Cross-platform static analysis for HDD/SSD images, raw imaging, and OS-based workflows. Adheres to proper Chain-of-Custody.</p>
-</div>
-            </div>
-</section>
-<section>
-<h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">Contact</h2>
-<div class="p-6 sm:p-8 brutalist-border text-center sm:text-left">
-<p class="text-xl sm:text-2xl text-black dark:text-white mb-6">Feel free to reach out. I'm always open to new ideas and collaborations.</p>
-<div class="flex flex-wrap items-center justify-center gap-4 sm:justify-start sm:gap-6 text-black dark:text-white mb-8">
-<span class="material-icons text-3xl sm:mr-4">email</span>
-<a class="text-xl sm:text-2xl brutalist-link" href="mailto:samridh.gaur@outlook.com">samridh.gaur@outlook.com</a>
-</div>
-<div class="flex flex-wrap justify-center gap-6 sm:justify-start sm:gap-8">
-<a class="text-black dark:text-white brutalist-link" href="#">
-<svg class="h-8 w-8" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48 0-.24-.01-1.02-.01-1.85-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.64-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.1.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85 0 1.33-.01 2.41-.01 2.73 0 .27.18.57.69.48C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"></path></svg>
-</a>
-<a class="text-black dark:text-white brutalist-link" href="#">
-<svg class="h-8 w-8" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.46 6c-.77.34-1.6.57-2.47.67.89-.53 1.57-1.37 1.89-2.38-.83.49-1.75.85-2.72 1.04C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98-3.56-.18-6.72-1.89-8.83-4.47-.37.63-.58 1.37-.58 2.15 0 1.49.76 2.8 1.91 3.56-.71 0-1.37-.22-1.95-.54v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 01-1.94.07c.54 1.7 2.11 2.94 3.97 2.97-1.47 1.15-3.32 1.83-5.33 1.83-.35 0-.69-.02-1.03-.06 1.9 1.22 4.16 1.93 6.58 1.93 7.89 0 12.21-6.54 12.21-12.21 0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.22z"></path></svg>
-</a>
-<a class="text-black dark:text-white brutalist-link" href="#">
-<svg class="h-8 w-8" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.32 12c0-2.39-1.93-4.32-4.32-4.32S7.68 9.61 7.68 12s1.93 4.32 4.32 4.32 4.32-1.93 4.32-4.32zm-4.32-2.88c1.59 0 2.88 1.29 2.88 2.88s-1.29 2.88-2.88 2.88-2.88-1.29-2.88-2.88 1.29-2.88 2.88-2.88zM20 6.4c0-1.32-.53-2.5-1.46-3.44S16.12 1.5 14.8 1.5h-5.6c-1.32 0-2.5.53-3.44 1.46S4.3 5.08 4.3 6.4v5.6c0 1.32.53 2.5 1.46 3.44S7.28 18.9 8.6 18.9h5.6c1.32 0 2.5-.53 3.44-1.46s1.46-2.12 1.46-3.44V6.4zm-1.44 9.12c0 .99-.39 1.88-1.04 2.53s-1.54 1.04-2.53 1.04H8.6c-.99 0-1.88-.39-2.53-1.04s-1.04-1.54-1.04-2.53V6.4c0-.99.39-1.88 1.04-2.53S7.61 2.83 8.6 2.83h5.6c.99 0 1.88.39 2.53 1.04s1.04 1.54 1.04 2.53v8.79z"></path></svg>
-</a>
-</div>
-</div>
-</section>
-</main>
-<footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
-<span class="uppercase">@sxmridhx0</span>
-<span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
-</footer>
-</div>
-<script>
-        const themeToggle = document.getElementById('theme-toggle');
-        const sunIcon = themeToggle.querySelector('span');
-        themeToggle.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            if (document.documentElement.classList.contains('dark')) {
-                sunIcon.textContent = 'dark_mode';
-                themeToggle.style.color = 'black'; // Set text color for the button
-                themeToggle.style.backgroundColor = 'white'; // Set background color for the button
-                themeToggle.style.borderColor = 'black';
-                themeToggle.querySelector('span').style.color = 'black'; // Set icon color
-            } else {
-                sunIcon.textContent = 'wb_sunny';
-                themeToggle.style.color = 'white'; // Set text color for the button
-                themeToggle.style.backgroundColor = 'black'; // Set background color for the button
-                themeToggle.style.borderColor = 'white';
-                themeToggle.querySelector('span').style.color = 'white'; // Set icon color
-            }
-        });
-        // Set initial icon and colors based on theme
-        if (document.documentElement.classList.contains('dark')) {
-            sunIcon.textContent = 'dark_mode';
-            themeToggle.style.color = 'black';
-            themeToggle.style.backgroundColor = 'white';
-            themeToggle.style.borderColor = 'black';
-            themeToggle.querySelector('span').style.color = 'black';
-        } else {
-            sunIcon.textContent = 'wb_sunny';
-            themeToggle.style.color = 'white';
-            themeToggle.style.backgroundColor = 'black';
-            themeToggle.style.borderColor = 'white';
-            themeToggle.querySelector('span').style.color = 'white';
-        }
-    </script>
-    <script>
-        // Latest Substack post injection (renders 1 newest post)
-        (function() {
-            const RSS_URL = 'https://sxmridh.substack.com/feed';
-            const container = document.getElementById('latest-post');
-            const CACHE_KEY = 'substack-latest-cache-v2';
-            const CACHE_FRESH_TTL = 1000 * 60 * 30; // 30 minutes - fresh cache
-            const CACHE_STALE_TTL = 1000 * 60 * 60 * 24 * 7; // 7 days - stale but usable
-            const SOURCES = [
-                RSS_URL,
-                'https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS_URL) + '&timestamp=' + Date.now(),
-                'https://r.jina.ai/' + RSS_URL
-            ];
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">samridh.com<span>~</span></a>
+            <nav>
+                <a href="index.html">home</a>
+                <a href="blog.html">blog</a>
+                <a href="#contact">contact</a>
+            </nav>
+        </header>
 
-            if (!container) return;
+        <main>
+            <section>
+                <h1>Samridh Gaur</h1>
+                <p class="subtitle">AI + Security Enthusiast</p>
+            </section>
 
-            function escapeHtml(str) {
-                return (str || '')
-                  .replace(/&/g, '&amp;')
-                  .replace(/</g, '&lt;')
-                  .replace(/>/g, '&gt;')
-                  .replace(/\"/g, '&quot;')
-                  .replace(/'/g, '&#39;');
-            }
+            <section class="intro">
+                <p>Passionate about learning, building products and strategies in emerging technologies.</p>
+                <p>Currently looking for opportunities.</p>
+            </section>
 
-            function readCache() {
-                try {
-                    const raw = localStorage.getItem(CACHE_KEY);
-                    if (!raw) return { xml: null, isFresh: false, isStale: false };
-                    const cached = JSON.parse(raw);
-                    if (!cached?.timestamp || !cached?.xml) return { xml: null, isFresh: false, isStale: false };
-                    
-                    const age = Date.now() - cached.timestamp;
-                    const isFresh = age <= CACHE_FRESH_TTL;
-                    const isStale = age > CACHE_FRESH_TTL && age <= CACHE_STALE_TTL;
-                    
-                    if (age > CACHE_STALE_TTL) return { xml: null, isFresh: false, isStale: false };
-                    return { xml: cached.xml, isFresh, isStale };
-                } catch (err) {
-                    console.warn('Failed to read cache', err);
-                    return { xml: null, isFresh: false, isStale: false };
-                }
-            }
-
-            function writeCache(xml) {
-                try {
-                    localStorage.setItem(CACHE_KEY, JSON.stringify({ xml, timestamp: Date.now() }));
-                } catch (err) {
-                    console.warn('Failed to store cache', err);
-                }
-            }
-
-            async function fetchWithTimeout(url, options = {}, timeout = 8000) {
-                const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), timeout);
-                try {
-                    const res = await fetch(url, { ...options, signal: controller.signal });
-                    if (!res.ok) throw new Error('Request failed: ' + res.status);
-                    return await res.text();
-                } finally {
-                    clearTimeout(timer);
-                }
-            }
-
-            async function fetchRSS(retries = 2) {
-                let lastErr = null;
-                for (let attempt = 0; attempt <= retries; attempt++) {
-                    for (const url of SOURCES) {
-                        try {
-                            const xml = await fetchWithTimeout(url, { 
-                                headers: { 'Accept': 'application/rss+xml,text/xml;q=0.9,*/*;q=0.8' } 
-                            });
-                            return xml;
-                        } catch (err) {
-                            lastErr = err;
-                            console.warn(`Fetch attempt ${attempt + 1} failed for ${url}:`, err.message);
-                        }
-                    }
-                    // Wait before retry with exponential backoff
-                    if (attempt < retries) {
-                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
-                    }
-                }
-                throw lastErr || new Error('Failed to fetch RSS after retries');
-            }
-
-            function parseLatest(xmlText) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(xmlText, 'application/xml');
-                const first = doc.querySelector('channel > item');
-                if (!first) return null;
-                const title = first.querySelector('title')?.textContent?.trim() || 'Untitled';
-                const link = first.querySelector('link')?.textContent?.trim() || '#';
-                const pubDate = first.querySelector('pubDate')?.textContent || '';
-                const description = first.querySelector('description')?.textContent || '';
-                const content = first.querySelector('content\\:encoded')?.textContent || description;
-                let image = null;
-                const imgMatch = content && content.match(/<img[^>]+src=[\"']([^\"']+)[\"']/i);
-                if (imgMatch) image = imgMatch[1];
-                if (!image) {
-                    const media = first.querySelector('media\\:content, media\\:thumbnail');
-                    if (media) image = media.getAttribute('url');
-                }
-                if (!image) {
-                    const enclosure = first.querySelector('enclosure');
-                    if (enclosure) image = enclosure.getAttribute('url');
-                }
-                return { title, link, pubDate, image };
-            }
-
-            function formatDate(pubDate) {
-                const d = new Date(pubDate);
-                if (isNaN(d)) return '';
-                return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: '2-digit' }).toUpperCase();
-            }
-
-            function render(post) {
-                if (!post) {
-                    container.innerHTML = '<div class="text-sm text-gray-500 dark:text-gray-400">No post found.</div>';
-                    return;
-                }
-
-                const hasImage = !!post.image;
-                const imgBlock = hasImage ? `
-                    <div class="md:col-span-2">
-                        <div class="brutalist-border overflow-hidden pointer-events-none">
-                            <img src="${escapeHtml(post.image)}" alt="" class="object-cover w-full h-40 sm:h-48 md:h-full"/>
-                        </div>
-                    </div>` : '';
-                const textColClass = hasImage ? 'md:col-span-3' : 'md:col-span-5';
-
-                container.innerHTML = `
-                    <a class="project-card group block p-6 sm:p-8 brutalist-border text-black dark:text-white" href="${escapeHtml(post.link)}" target="_blank" rel="noopener noreferrer">
-                        <div class="grid md:grid-cols-5 gap-6 sm:gap-8 items-start">
-                            ${imgBlock}
-                            <div class="${textColClass} space-y-4 sm:space-y-5">
-                                <p class="text-xs uppercase">${escapeHtml(formatDate(post.pubDate))}</p>
-                                <h3 class="text-2xl sm:text-3xl uppercase font-bold">${escapeHtml(post.title)}</h3>
-                                <span class="inline-flex items-center gap-2 text-base sm:text-lg card-link-cta">
-                                    Read on Substack →
-                                </span>
-                            </div>
-                        </div>
-                    </a>`;
-            }
-
-            (async function initLatest() {
-                const cache = readCache();
+            <section>
+                <h2>Projects</h2>
                 
-                // Stale-while-revalidate: Always show cached content immediately if available
-                if (cache.xml) {
-                    try {
-                        const cachedPost = parseLatest(cache.xml);
-                        render(cachedPost);
-                        console.log(cache.isFresh ? 'Showing fresh cached post' : 'Showing stale cached post');
-                    } catch (err) {
-                        console.warn('Failed to render cached post', err);
-                    }
-                }
-                
-                // If no cache or cache is stale, show loading state
-                if (!cache.xml) {
-                    container.innerHTML = `
-                        <div class="flex justify-center">
-                            <span class="loading-pill">
-                                <span class="loading-dot"></span>
-                                <span class="loading-dot"></span>
-                                <span class="loading-dot"></span>
-                                THINKING
-                            </span>
-                        </div>`;
-                }
+                <a href="https://talkativelogs.onrender.com" target="_blank" rel="noopener noreferrer" class="project-card">
+                    <div class="project-header">
+                        <h3>Talkative Logs</h3>
+                        <span class="project-year">2025</span>
+                    </div>
+                    <p>Copilot-style log assistant with function-calling + RAG (LangChain + FAISS) to answer queries over uploaded docs/logs. Designed prompts, grounding, guardrails, and monitoring for response time and token costs; improved latency via streaming and smaller context windows.</p>
+                    <span class="project-link">talkativelogs.onrender.com →</span>
+                </a>
 
-                // Always try to fetch fresh data if cache is not fresh
-                if (!cache.isFresh) {
-                    try {
-                        const xml = await fetchRSS();
-                        writeCache(xml);
-                        const post = parseLatest(xml);
-                        render(post);
-                        console.log('Updated with fresh post from Substack');
-                    } catch (e) {
-                        // If fetch fails and we have no cache, show error
-                        if (!cache.xml) {
-                            container.innerHTML = '<div class="text-sm text-red-600">Unable to load post. Please check your connection and try again.</div>';
-                        }
-                        console.error('Failed to fetch fresh post:', e);
-                    }
-                }
-            })();
-        })();
-    </script>
-</body></html>
+                <a href="https://github.com/samridhx0/PURRRGE" target="_blank" rel="noopener noreferrer" class="project-card">
+                    <div class="project-header">
+                        <h3>PURRRGE</h3>
+                        <span class="project-year">2025</span>
+                    </div>
+                    <p>Secure deletion, cleaning free space, and zeroing disks - safer and more discoverable - while preserving the full power of the SDelete CLI.</p>
+                    <span class="project-link">github.com/samridhx0/PURRRGE →</span>
+                </a>
+
+                <a href="https://github.com/samridhx0/adb-plus" target="_blank" rel="noopener noreferrer" class="project-card">
+                    <div class="project-header">
+                        <h3>Adb-Plus</h3>
+                        <span class="project-year">2025</span>
+                    </div>
+                    <p>Streamlines everyday Android workflows: manage apps, run shell commands, launch screen mirroring (scrcpy), and generate forensic-style snapshots for triage and documentation.</p>
+                    <span class="project-link">github.com/samridhx0/adb-plus →</span>
+                </a>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Emergency vs. Non-Emergency Vehicle Classifier</h3>
+                        <span class="project-year">2024</span>
+                    </div>
+                    <p>Deep learning classifier leveraging Grad-CAMs to distinguish emergency vs. non-emergency vehicles.</p>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Deep Psychographics in Marketing</h3>
+                        <span class="project-year">2023</span>
+                    </div>
+                    <p>Research on using the OCEAN (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) model to enhance consumer engagement and targeting strategies.</p>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>CyTriage Malware Forensics Tool</h3>
+                        <span class="project-year">2024</span>
+                    </div>
+                    <p>Cross-platform static analysis for HDD/SSD images, raw imaging, and OS-based workflows. Adheres to proper Chain-of-Custody.</p>
+                </div>
+            </section>
+
+            <section id="contact">
+                <h2>Contact</h2>
+                <div class="contact-box">
+                    <p>Feel free to reach out. I'm always open to new ideas and collaborations.</p>
+                    <div class="email">
+                        <a href="mailto:samridh.gaur@outlook.com">samridh.gaur@outlook.com</a>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://github.com/samridhx0" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://sxmridh.substack.com" target="_blank" rel="noopener noreferrer">Substack</a>
+                        <a href="https://linkedin.com/in/samridhx0" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <span>@sxmridhx0</span>
+            <span>v1.0.0</span>
+        </footer>
+    </div>
+</body>
+</html>

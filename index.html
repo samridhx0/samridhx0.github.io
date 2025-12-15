@@ -4,336 +4,128 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate">
-    <title>Home - Samridh Gaur</title>
+    <title>Samridh Gaur</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #111;
-            background-color: #fff;
-            padding: 20px;
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 0 10px;
+            font: 18px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #444;
         }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
+        h1, h2, h3 {
+            line-height: 1.2;
         }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 30px;
-            border-bottom: 3px solid #111;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
+        a {
+            color: #07c;
             text-decoration: none;
-            color: #111;
         }
-
-        .logo span {
-            color: #019863;
-        }
-
-        nav {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #111;
-            font-size: 18px;
-            font-weight: bold;
-            padding: 5px 0;
-            border-bottom: 3px solid transparent;
-            transition: border-color 0.3s;
-        }
-
-        nav a:hover {
-            border-bottom-color: #111;
-        }
-
-        h1 {
-            font-size: 48px;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 15px;
-            letter-spacing: -1px;
-        }
-
-        h2 {
-            font-size: 36px;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 30px;
-            letter-spacing: -1px;
-        }
-
-        h3 {
-            font-size: 24px;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .subtitle {
-            font-size: 24px;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 40px;
-        }
-
-        section {
-            margin-bottom: 60px;
-        }
-
-        .intro p {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        .project-card {
-            border: 3px solid #111;
-            padding: 30px;
-            margin-bottom: 25px;
-            text-decoration: none;
-            color: #111;
-            display: block;
-            transition: background-color 0.3s;
-        }
-
-        .project-card:hover {
-            background-color: #f5f5f5;
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .project-year {
-            border: 3px solid #111;
-            padding: 5px 15px;
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .project-card p {
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .project-link {
-            font-size: 16px;
-            color: #111;
-        }
-
-        .contact-box {
-            border: 3px solid #111;
-            padding: 30px;
-        }
-
-        .contact-box p {
-            font-size: 20px;
-            margin-bottom: 25px;
-        }
-
-        .email {
-            font-size: 20px;
-            margin-bottom: 25px;
-        }
-
-        .email a {
-            color: #111;
-            text-decoration: none;
-            border-bottom: 3px solid transparent;
-            padding-bottom: 2px;
-            transition: border-color 0.3s;
-        }
-
-        .email a:hover {
-            border-bottom-color: #111;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
-
-        .social-links a {
-            color: #111;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        footer {
-            margin-top: 80px;
-            padding: 20px;
-            border: 3px solid #111;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        footer span {
-            text-transform: uppercase;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            h1 {
-                font-size: 36px;
-            }
-
-            h2 {
-                font-size: 28px;
-            }
-
-            .subtitle {
-                font-size: 20px;
-            }
-
-            .intro p {
-                font-size: 18px;
-            }
-
-            nav {
-                gap: 20px;
-            }
-
-            footer {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="index.html" class="logo">samridh.com<span>~</span></a>
-            <nav>
-                <a href="index.html">home</a>
-                <a href="blog.html">blog</a>
-                <a href="#contact">contact</a>
-            </nav>
-        </header>
+    <header>
+        <nav>
+            <a href="index.html">home</a> |
+            <a href="blog.html">blog</a> |
+            <a href="#contact">contact</a>
+        </nav>
+    </header>
 
-        <main>
-            <section>
-                <h1>Samridh Gaur</h1>
-                <p class="subtitle">AI + Security Enthusiast</p>
-            </section>
+    <h1>Samridh Gaur</h1>
+    <p><strong>AI + Security Enthusiast</strong></p>
 
-            <section class="intro">
-                <p>Passionate about learning, building products and strategies in emerging technologies.</p>
-                <p>Currently looking for opportunities.</p>
-            </section>
+    <p>Passionate about learning, building products and strategies in emerging technologies.</p>
+    <p>Currently looking for opportunities.</p>
 
-            <section>
-                <h2>Projects</h2>
-                
-                <a href="https://talkativelogs.onrender.com" target="_blank" rel="noopener noreferrer" class="project-card">
-                    <div class="project-header">
-                        <h3>Talkative Logs</h3>
-                        <span class="project-year">2025</span>
-                    </div>
-                    <p>Copilot-style log assistant with function-calling + RAG (LangChain + FAISS) to answer queries over uploaded docs/logs. Designed prompts, grounding, guardrails, and monitoring for response time and token costs; improved latency via streaming and smaller context windows.</p>
-                    <span class="project-link">talkativelogs.onrender.com →</span>
-                </a>
+    <h2>Latest Post</h2>
+    <div id="latest-post">Loading...</div>
 
-                <a href="https://github.com/samridhx0/PURRRGE" target="_blank" rel="noopener noreferrer" class="project-card">
-                    <div class="project-header">
-                        <h3>PURRRGE</h3>
-                        <span class="project-year">2025</span>
-                    </div>
-                    <p>Secure deletion, cleaning free space, and zeroing disks - safer and more discoverable - while preserving the full power of the SDelete CLI.</p>
-                    <span class="project-link">github.com/samridhx0/PURRRGE →</span>
-                </a>
+    <h2>Projects</h2>
 
-                <a href="https://github.com/samridhx0/adb-plus" target="_blank" rel="noopener noreferrer" class="project-card">
-                    <div class="project-header">
-                        <h3>Adb-Plus</h3>
-                        <span class="project-year">2025</span>
-                    </div>
-                    <p>Streamlines everyday Android workflows: manage apps, run shell commands, launch screen mirroring (scrcpy), and generate forensic-style snapshots for triage and documentation.</p>
-                    <span class="project-link">github.com/samridhx0/adb-plus →</span>
-                </a>
+    <h3><a href="https://talkativelogs.onrender.com" target="_blank" rel="noopener noreferrer">Talkative Logs</a></h3>
+    <p>Copilot-style log assistant with function-calling + RAG (LangChain + FAISS) to answer queries over uploaded docs/logs. Designed prompts, grounding, guardrails, and monitoring for response time and token costs; improved latency via streaming and smaller context windows.</p>
 
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Emergency vs. Non-Emergency Vehicle Classifier</h3>
-                        <span class="project-year">2024</span>
-                    </div>
-                    <p>Deep learning classifier leveraging Grad-CAMs to distinguish emergency vs. non-emergency vehicles.</p>
-                </div>
+    <h3><a href="https://github.com/samridhx0/PURRRGE" target="_blank" rel="noopener noreferrer">PURRRGE</a></h3>
+    <p>Secure deletion, cleaning free space, and zeroing disks - safer and more discoverable - while preserving the full power of the SDelete CLI.</p>
 
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Deep Psychographics in Marketing</h3>
-                        <span class="project-year">2023</span>
-                    </div>
-                    <p>Research on using the OCEAN (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) model to enhance consumer engagement and targeting strategies.</p>
-                </div>
+    <h3><a href="https://github.com/samridhx0/adb-plus" target="_blank" rel="noopener noreferrer">Adb-Plus</a></h3>
+    <p>Streamlines everyday Android workflows: manage apps, run shell commands, launch screen mirroring (scrcpy), and generate forensic-style snapshots for triage and documentation.</p>
 
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>CyTriage Malware Forensics Tool</h3>
-                        <span class="project-year">2024</span>
-                    </div>
-                    <p>Cross-platform static analysis for HDD/SSD images, raw imaging, and OS-based workflows. Adheres to proper Chain-of-Custody.</p>
-                </div>
-            </section>
+    <h3>Emergency vs. Non-Emergency Vehicle Classifier</h3>
+    <p>Deep learning classifier leveraging Grad-CAMs to distinguish emergency vs. non-emergency vehicles.</p>
 
-            <section id="contact">
-                <h2>Contact</h2>
-                <div class="contact-box">
-                    <p>Feel free to reach out. I'm always open to new ideas and collaborations.</p>
-                    <div class="email">
-                        <a href="mailto:samridh.gaur@outlook.com">samridh.gaur@outlook.com</a>
-                    </div>
-                    <div class="social-links">
-                        <a href="https://github.com/samridhx0" target="_blank" rel="noopener noreferrer">GitHub</a>
-                        <a href="https://sxmridh.substack.com" target="_blank" rel="noopener noreferrer">Substack</a>
-                        <a href="https://linkedin.com/in/samridhx0" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                    </div>
-                </div>
-            </section>
-        </main>
+    <h3>Deep Psychographics in Marketing</h3>
+    <p>Research on using the OCEAN (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) model to enhance consumer engagement and targeting strategies.</p>
 
-        <footer>
-            <span>@sxmridhx0</span>
-            <span>v1.0.0</span>
-        </footer>
-    </div>
+    <h3>CyTriage Malware Forensics Tool</h3>
+    <p>Cross-platform static analysis for HDD/SSD images, raw imaging, and OS-based workflows. Adheres to proper Chain-of-Custody.</p>
+
+    <h2 id="contact">Contact</h2>
+    <p>Feel free to reach out. I'm always open to new ideas and collaborations.</p>
+    <p>Email: <a href="mailto:samridh.gaur@outlook.com">samridh.gaur@outlook.com</a></p>
+    <p>
+        <a href="https://github.com/samridhx0" target="_blank" rel="noopener noreferrer">GitHub</a> |
+        <a href="https://sxmridh.substack.com" target="_blank" rel="noopener noreferrer">Substack</a> |
+        <a href="https://linkedin.com/in/samridhx0" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </p>
+
+    <hr>
+    <footer>
+        <p>@sxmridhx0 | v1.0.0</p>
+    </footer>
+
+    <script>
+        // Fetch latest post from Substack RSS (text only, no images)
+        (function() {
+            const RSS_URL = 'https://sxmridh.substack.com/feed';
+            const container = document.getElementById('latest-post');
+            const SOURCES = [
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS_URL),
+                'https://r.jina.ai/' + RSS_URL
+            ];
+
+            async function fetchRSS() {
+                for (const url of SOURCES) {
+                    try {
+                        const res = await fetch(url, { 
+                            headers: { 'Accept': 'application/rss+xml,text/xml;q=0.9,*/*;q=0.8' } 
+                        });
+                        if (res.ok) return await res.text();
+                    } catch (err) {
+                        console.warn('Failed to fetch from', url);
+                    }
+                }
+                throw new Error('Failed to fetch RSS');
+            }
+
+            function parseLatest(xmlText) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(xmlText, 'application/xml');
+                const first = doc.querySelector('channel > item');
+                if (!first) return null;
+                return {
+                    title: first.querySelector('title')?.textContent?.trim() || 'Untitled',
+                    link: first.querySelector('link')?.textContent?.trim() || '#'
+                };
+            }
+
+            fetchRSS()
+                .then(xml => parseLatest(xml))
+                .then(post => {
+                    if (post) {
+                        container.innerHTML = `<p><a href="${post.link}" target="_blank" rel="noopener noreferrer">${post.title}</a></p>`;
+                    } else {
+                        container.innerHTML = '<p>No posts found.</p>';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    container.innerHTML = '<p><a href="https://sxmridh.substack.com" target="_blank" rel="noopener noreferrer">Visit my Substack</a></p>';
+                });
+        })();
+    </script>
 </body>
 </html>

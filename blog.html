@@ -33,21 +33,19 @@
             padding: 0;
         }
         .post-item {
-            margin-bottom: 2em;
-            padding-bottom: 1.5em;
-            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 1em;
+            gap: 1.5em;
         }
-        .post-item:last-child {
-            border-bottom: none;
-        }
-        .post-meta {
+        .post-date {
             color: #888;
             font-size: 0.9em;
-            margin-bottom: 0.5em;
+            min-width: 100px;
+            flex-shrink: 0;
         }
-        .post-description {
-            color: #666;
-            margin-top: 0.5em;
+        .post-title {
+            flex: 1;
         }
         article {
             margin-top: 2em;
@@ -171,12 +169,75 @@
             return html;
         }
 
+        // Fetch Substack RSS posts
+        async function fetchSubstackPosts() {
+            const RSS_URL = 'https://sxmridh.substack.com/feed';
+            const SOURCES = [
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS_URL),
+                'https://r.jina.ai/' + RSS_URL
+            ];
+
+            for (const url of SOURCES) {
+                try {
+                    const res = await fetch(url, { 
+                        headers: { 'Accept': 'application/rss+xml,text/xml;q=0.9,*/*;q=0.8' } 
+                    });
+                    if (res.ok) {
+                        const xmlText = await res.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(xmlText, 'application/xml');
+                        const items = Array.from(doc.querySelectorAll('item'));
+                        
+                        return items.map(item => ({
+                            title: item.querySelector('title')?.textContent?.trim() || 'Untitled',
+                            link: item.querySelector('link')?.textContent?.trim() || '#',
+                            date: item.querySelector('pubDate')?.textContent || '',
+                            source: 'substack'
+                        }));
+                    }
+                } catch (err) {
+                    console.warn('Failed to fetch from', url);
+                }
+            }
+            return [];
+        }
+
+        // Fetch markdown posts
+        async function fetchMarkdownPosts() {
+            try {
+                const res = await fetch('posts/posts.json');
+                const posts = await res.json();
+                return posts.map(p => ({
+                    title: p.title,
+                    link: `blog.html?post=${p.id}`,
+                    date: p.date,
+                    source: 'markdown',
+                    id: p.id,
+                    file: p.file
+                }));
+            } catch (err) {
+                console.warn('Failed to fetch markdown posts', err);
+                return [];
+            }
+        }
+
+        // Format date consistently
+        function formatDate(dateStr) {
+            try {
+                const d = new Date(dateStr);
+                if (isNaN(d)) return dateStr;
+                return d.toISOString().split('T')[0];
+            } catch {
+                return dateStr;
+            }
+        }
+
         // Get post ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('post');
 
         if (postId) {
-            // Show single post
+            // Show single post (markdown only)
             document.getElementById('blog-list').style.display = 'none';
             document.getElementById('post-content').style.display = 'block';
             
@@ -199,24 +260,41 @@
                     }
                 });
         } else {
-            // Show post list
-            fetch('posts/posts.json')
-                .then(r => r.json())
-                .then(posts => {
+            // Show combined post list
+            Promise.all([fetchSubstackPosts(), fetchMarkdownPosts()])
+                .then(([substackPosts, markdownPosts]) => {
                     document.getElementById('loading').style.display = 'none';
+                    
+                    // Combine and sort by date (newest first)
+                    const allPosts = [...substackPosts, ...markdownPosts].sort((a, b) => {
+                        const dateA = new Date(a.date);
+                        const dateB = new Date(b.date);
+                        return dateB - dateA;
+                    });
+                    
                     const postsEl = document.getElementById('posts');
-                    posts.forEach(post => {
+                    
+                    if (allPosts.length === 0) {
+                        postsEl.innerHTML = '<li>No posts found.</li>';
+                        return;
+                    }
+                    
+                    allPosts.forEach(post => {
                         const li = document.createElement('li');
                         li.className = 'post-item';
+                        
+                        const date = formatDate(post.date);
+                        const target = post.source === 'substack' ? ' target="_blank" rel="noopener noreferrer"' : '';
+                        
                         li.innerHTML = `
-                            <div class="post-meta">${post.date}</div>
-                            <h3><a href="blog.html?post=${post.id}">${post.title}</a></h3>
-                            <div class="post-description">${post.description}</div>
+                            <span class="post-date">${date}</span>
+                            <span class="post-title"><a href="${post.link}"${target}>${post.title}</a></span>
                         `;
                         postsEl.appendChild(li);
                     });
                 })
-                .catch(() => {
+                .catch(err => {
+                    console.error(err);
                     document.getElementById('loading').textContent = 'Failed to load posts.';
                 });
         }

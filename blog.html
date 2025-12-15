@@ -120,16 +120,24 @@
             top: 10px;
             right: 10px;
             background: none;
-            border: 1px solid currentColor;
-            color: inherit;
-            padding: 5px 10px;
+            border: none;
             cursor: pointer;
-            font-size: 14px;
+            padding: 5px;
+            line-height: 0;
+        }
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">○</button>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
     
     <header>
         <nav>
@@ -208,39 +216,6 @@
             return html;
         }
 
-        // Fetch Substack RSS posts
-        async function fetchSubstackPosts() {
-            const RSS_URL = 'https://sxmridh.substack.com/feed';
-            const SOURCES = [
-                'https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS_URL),
-                'https://r.jina.ai/' + RSS_URL
-            ];
-
-            for (const url of SOURCES) {
-                try {
-                    const res = await fetch(url, { 
-                        headers: { 'Accept': 'application/rss+xml,text/xml;q=0.9,*/*;q=0.8' } 
-                    });
-                    if (res.ok) {
-                        const xmlText = await res.text();
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(xmlText, 'application/xml');
-                        const items = Array.from(doc.querySelectorAll('item'));
-                        
-                        return items.map(item => ({
-                            title: item.querySelector('title')?.textContent?.trim() || 'Untitled',
-                            link: item.querySelector('link')?.textContent?.trim() || '#',
-                            date: item.querySelector('pubDate')?.textContent || '',
-                            source: 'substack'
-                        }));
-                    }
-                } catch (err) {
-                    console.warn('Failed to fetch from', url);
-                }
-            }
-            return [];
-        }
-
         // Fetch markdown posts
         async function fetchMarkdownPosts() {
             try {
@@ -299,13 +274,13 @@
                     }
                 });
         } else {
-            // Show combined post list
-            Promise.all([fetchSubstackPosts(), fetchMarkdownPosts()])
-                .then(([substackPosts, markdownPosts]) => {
+            // Show markdown post list
+            fetchMarkdownPosts()
+                .then(markdownPosts => {
                     document.getElementById('loading').style.display = 'none';
                     
-                    // Combine and sort by date (newest first)
-                    const allPosts = [...substackPosts, ...markdownPosts].sort((a, b) => {
+                    // Sort by date (newest first)
+                    const allPosts = markdownPosts.sort((a, b) => {
                         const dateA = new Date(a.date);
                         const dateB = new Date(b.date);
                         return dateB - dateA;
@@ -323,11 +298,10 @@
                         li.className = 'post-item';
                         
                         const date = formatDate(post.date);
-                        const target = post.source === 'substack' ? ' target="_blank" rel="noopener noreferrer"' : '';
                         
                         li.innerHTML = `
                             <span class="post-date">${date}</span>
-                            <span class="post-title"><a href="${post.link}"${target}>${post.title}</a></span>
+                            <span class="post-title"><a href="${post.link}">${post.title}</a></span>
                         `;
                         postsEl.appendChild(li);
                     });

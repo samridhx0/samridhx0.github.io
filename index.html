@@ -48,6 +48,54 @@
             height: 24px;
             fill: currentColor;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            overflow: auto;
+            padding: 20px;
+        }
+        .modal.show {
+            display: block;
+        }
+        .modal-content {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            position: relative;
+        }
+        body.dark .modal-content {
+            background: #1a1a1a;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: inherit;
+            line-height: 1;
+            padding: 5px 10px;
+        }
+        .modal-close:hover {
+            opacity: 0.7;
+        }
+        .modal-images img {
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        body.dark .modal-images img {
+            border-color: #444;
+        }
     </style>
 </head>
 <body>
@@ -85,8 +133,19 @@
     <h3><a href="https://github.com/samridhx0/adb-plus" target="_blank" rel="noopener noreferrer">Adb-Plus</a></h3>
     <p>Streamlines everyday Android workflows: manage apps, run shell commands, launch screen mirroring (scrcpy), and generate forensic-style snapshots for triage and documentation.</p>
 
-    <h3>CyTriage Malware Forensics Tool</h3>
+    <h3><a href="#" onclick="showCyTriageModal(event)">CyTriage Malware Forensics Tool</a></h3>
     <p>Cross-platform static analysis for HDD/SSD images, raw imaging, and OS-based workflows. Adheres to proper Chain-of-Custody.</p>
+
+    <div id="cytriage-modal" class="modal" onclick="closeModalOnBackdrop(event)">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCyTriageModal()">&times;</button>
+            <h2>CyTriage Malware Forensics Tool</h2>
+            <div class="modal-images">
+                <img src="https://github.com/user-attachments/assets/e0aa83cd-8280-45d4-bbd4-f567ce295c8e" alt="CyTriage Screenshot 1">
+                <img src="https://github.com/user-attachments/assets/230ec6a5-8317-4532-882a-4016769951ea" alt="CyTriage Screenshot 2">
+            </div>
+        </div>
+    </div>
 
     <h2>Papers</h2>
     <p><em>Amity Business School</em></p>
@@ -112,6 +171,31 @@
     </footer>
 
     <script>
+        // CyTriage modal functions
+        function showCyTriageModal(e) {
+            e.preventDefault();
+            document.getElementById('cytriage-modal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeCyTriageModal() {
+            document.getElementById('cytriage-modal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        
+        function closeModalOnBackdrop(e) {
+            if (e.target.id === 'cytriage-modal') {
+                closeCyTriageModal();
+            }
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCyTriageModal();
+            }
+        });
+        
         // Fetch latest markdown post
         (function() {
             const container = document.getElementById('latest-post');

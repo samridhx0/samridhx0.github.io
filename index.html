@@ -298,6 +298,8 @@
         
         // Load daily Bhagavad Gita quote
         (function() {
+            const MS_PER_DAY = 86400000; // Milliseconds per day
+            
             function loadQuote() {
                 const quoteContainer = document.getElementById('gita-quote-container');
                 if (!quoteContainer) {
@@ -305,8 +307,8 @@
                     return;
                 }
                 
-                // Add cache busting parameter to ensure fresh load
-                const cacheBuster = Math.floor(Date.now() / 86400000); // Changes once per day
+                // Add cache busting parameter to ensure fresh load (changes once per day)
+                const cacheBuster = Math.floor(Date.now() / MS_PER_DAY);
                 fetch('bhagavad_gita_quotes.json?v=' + cacheBuster)
                     .then(r => {
                         if (!r.ok) throw new Error('Failed to fetch quotes: ' + r.status);
@@ -318,8 +320,8 @@
                         }
                         // Use current date to select a quote (same quote for the whole day)
                         const now = new Date();
-                        const MS_PER_DAY = 86400000;
-                        const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / MS_PER_DAY);
+                        const startOfYear = new Date(now.getFullYear(), 0, 1);
+                        const dayOfYear = Math.floor((now - startOfYear) / MS_PER_DAY);
                         const quoteIndex = dayOfYear % quotes.length;
                         const quote = quotes[quoteIndex];
                         

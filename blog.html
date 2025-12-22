@@ -410,7 +410,8 @@
                 .then(quotes => {
                     // Use current date to select a quote (same quote for the whole day)
                     const now = new Date();
-                    const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+                    const MS_PER_DAY = 86400000;
+                    const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / MS_PER_DAY);
                     const quoteIndex = dayOfYear % quotes.length;
                     const quote = quotes[quoteIndex];
                     

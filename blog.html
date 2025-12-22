@@ -403,29 +403,56 @@
         
         // Load daily Bhagavad Gita quote
         (function() {
-            const quoteContainer = document.getElementById('gita-quote-container');
+            function loadQuote() {
+                const quoteContainer = document.getElementById('gita-quote-container');
+                if (!quoteContainer) {
+                    console.error('Quote container not found');
+                    return;
+                }
+                
+                // Add cache busting parameter to ensure fresh load
+                const cacheBuster = Math.floor(Date.now() / 86400000); // Changes once per day
+                fetch('bhagavad_gita_quotes.json?v=' + cacheBuster)
+                    .then(r => {
+                        if (!r.ok) throw new Error('Failed to fetch quotes: ' + r.status);
+                        return r.json();
+                    })
+                    .then(quotes => {
+                        if (!quotes || quotes.length === 0) {
+                            throw new Error('No quotes available');
+                        }
+                        // Use current date to select a quote (same quote for the whole day)
+                        const now = new Date();
+                        const MS_PER_DAY = 86400000;
+                        const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / MS_PER_DAY);
+                        const quoteIndex = dayOfYear % quotes.length;
+                        const quote = quotes[quoteIndex];
+                        
+                        quoteContainer.innerHTML = `
+                            <div class="gita-quote">
+                                <p class="gita-quote-text">"${quote.text}"</p>
+                                <p class="gita-quote-ref">— Bhagavad Gita ${quote.chapter}:${quote.verse}</p>
+                            </div>
+                        `;
+                    })
+                    .catch(err => {
+                        console.error('Failed to load quote:', err);
+                        // Show a fallback quote if loading fails
+                        quoteContainer.innerHTML = `
+                            <div class="gita-quote">
+                                <p class="gita-quote-text">"You have a right to perform your prescribed duty, but you are not entitled to the fruits of action."</p>
+                                <p class="gita-quote-ref">— Bhagavad Gita 2:47</p>
+                            </div>
+                        `;
+                    });
+            }
             
-            fetch('bhagavad_gita_quotes.json')
-                .then(r => r.json())
-                .then(quotes => {
-                    // Use current date to select a quote (same quote for the whole day)
-                    const now = new Date();
-                    const MS_PER_DAY = 86400000;
-                    const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / MS_PER_DAY);
-                    const quoteIndex = dayOfYear % quotes.length;
-                    const quote = quotes[quoteIndex];
-                    
-                    quoteContainer.innerHTML = `
-                        <div class="gita-quote">
-                            <p class="gita-quote-text">"${quote.text}"</p>
-                            <p class="gita-quote-ref">— Bhagavad Gita ${quote.chapter}:${quote.verse}</p>
-                        </div>
-                    `;
-                })
-                .catch(err => {
-                    console.error('Failed to load quote:', err);
-                    // Silently fail - don't show anything if quotes can't be loaded
-                });
+            // Ensure DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadQuote);
+            } else {
+                loadQuote();
+            }
         })();
     </script>
 </body>

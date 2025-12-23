@@ -2,8 +2,6 @@
 
 A minimal, efficient, and beautiful markdown-based blog system built with pure HTML, CSS, and vanilla JavaScript.
 
-**Live on branch: `copilot/markdown-blog-system`**
-
 ## Features
 
 -  **Pure Markdown**: Write posts in simple `.md` files

@@ -99,15 +99,6 @@ The blog uses minimal CSS for maximum readability:
 - Screen reader friendly
 - Works without JavaScript (graceful degradation)
 
-## Deployment
-
-Deploy to GitHub Pages, Netlify, Vercel, or any static hosting:
-
-```bash
-git add .
-git commit -m "Add new post"
-git push
-```
 
 That's it! No build step, no deployment pipeline.
 

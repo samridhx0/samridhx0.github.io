@@ -114,6 +114,6 @@ That's it! No build step, no deployment pipeline.
 
 This blog system embodies the principle of **simplicity at the core**:
 
-> "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away." — Antoine de Saint-Exupéry
+> "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away." - Antoine de Saint-Exupéry
 
 Focus on writing. Everything else is optional.

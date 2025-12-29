@@ -163,7 +163,13 @@
 <section class="mb-16 sm:mb-20 text-lg sm:text-2xl text-black dark:text-white space-y-6 max-w-3xl mx-auto sm:mx-0 text-center sm:text-left">
 <p>Passionate about learning, building products and strategies in emerging technologies.</p>
 <p>Currently looking for opportunities.</p>
-<p>TBA</p>
+</section>
+<section class="mb-16 sm:mb-20">
+<div class="brutalist-border p-6 sm:p-8 max-w-3xl mx-auto sm:mx-0">
+<p class="text-xs uppercase mb-4 text-black dark:text-white font-bold">Daily Wisdom</p>
+<blockquote id="gita-quote" class="text-lg sm:text-xl text-black dark:text-white italic leading-relaxed"></blockquote>
+<p id="gita-reference" class="text-sm uppercase mt-4 text-black dark:text-white opacity-70"></p>
+</div>
 </section>
 <section class="mb-16 sm:mb-20">
 <h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">Latest Post</h2>
@@ -472,6 +478,111 @@
                     }
                 }
             })();
+        })();
+    </script>
+    <script>
+        // Bhagavad Gita Quote Rotation
+        (function() {
+            const quotes = [
+                {
+                    text: "You have the right to work, but never to the fruit of work. You should never engage in action for the sake of reward, nor should you long for inaction.",
+                    reference: "Bhagavad Gita 2.47"
+                },
+                {
+                    text: "When meditation is mastered, the mind is unwavering like the flame of a lamp in a windless place.",
+                    reference: "Bhagavad Gita 6.19"
+                },
+                {
+                    text: "A person can rise through the efforts of his own mind; or draw himself down, in the same manner. Because each person is his own friend or enemy.",
+                    reference: "Bhagavad Gita 6.5"
+                },
+                {
+                    text: "You are what you believe in. You become that which you believe you can become.",
+                    reference: "Bhagavad Gita 9.34"
+                },
+                {
+                    text: "The mind is restless and difficult to restrain, but it is subdued by practice.",
+                    reference: "Bhagavad Gita 6.35"
+                },
+                {
+                    text: "Set thy heart upon thy work, but never on its reward.",
+                    reference: "Bhagavad Gita 2.47"
+                },
+                {
+                    text: "There is neither this world nor the world beyond nor happiness for the one who doubts.",
+                    reference: "Bhagavad Gita 4.40"
+                },
+                {
+                    text: "Whatever happened, happened for the good. Whatever is happening, is happening for the good. Whatever will happen, will also happen for the good.",
+                    reference: "Bhagavad Gita 2.14"
+                },
+                {
+                    text: "Change is the law of the universe. You can be a millionaire, or a pauper in an instant.",
+                    reference: "Bhagavad Gita 2.27"
+                },
+                {
+                    text: "The soul is neither born, and nor does it die. It is unborn, eternal, ever-existing and primeval.",
+                    reference: "Bhagavad Gita 2.20"
+                },
+                {
+                    text: "Perform your obligatory duty, because action is indeed better than inaction.",
+                    reference: "Bhagavad Gita 3.8"
+                },
+                {
+                    text: "One who sees inaction in action, and action in inaction, is intelligent among men.",
+                    reference: "Bhagavad Gita 4.18"
+                },
+                {
+                    text: "A gift is pure when it is given from the heart to the right person at the right time and at the right place, and when we expect nothing in return.",
+                    reference: "Bhagavad Gita 17.20"
+                },
+                {
+                    text: "As they approach me, so I receive them. All paths lead to me.",
+                    reference: "Bhagavad Gita 4.11"
+                },
+                {
+                    text: "Those who are motivated only by desire for the fruits of action are miserable, for they are constantly anxious about the results of what they do.",
+                    reference: "Bhagavad Gita 2.49"
+                },
+                {
+                    text: "The happiness which comes from long practice, which leads to the end of suffering, which at first is like poison, but at last like nectar - this kind of happiness arises from the serenity of one's own mind.",
+                    reference: "Bhagavad Gita 18.37"
+                },
+                {
+                    text: "There is nothing lost or wasted in this life.",
+                    reference: "Bhagavad Gita 2.40"
+                },
+                {
+                    text: "Whatever you do, do it as an offering to me.",
+                    reference: "Bhagavad Gita 9.27"
+                },
+                {
+                    text: "For one who has conquered his mind, a mind is best of friends, but for one who has failed to do so, a mind is the greatest enemy.",
+                    reference: "Bhagavad Gita 6.6"
+                },
+                {
+                    text: "Man is made by his belief. As he believes, so he is.",
+                    reference: "Bhagavad Gita 17.3"
+                }
+            ];
+
+            function displayRandomQuote() {
+                const quoteElement = document.getElementById('gita-quote');
+                const referenceElement = document.getElementById('gita-reference');
+                
+                if (!quoteElement || !referenceElement) return;
+                
+                // Select a random quote
+                const randomIndex = Math.floor(Math.random() * quotes.length);
+                const selectedQuote = quotes[randomIndex];
+                
+                // Display the quote
+                quoteElement.textContent = `"${selectedQuote.text}"`;
+                referenceElement.textContent = `— ${selectedQuote.reference}`;
+            }
+
+            // Display a random quote when the page loads
+            displayRandomQuote();
         })();
     </script>
 </body></html>

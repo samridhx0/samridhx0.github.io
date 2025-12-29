@@ -1,360 +1,485 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<!-- Strictly prevent indexing/caching by crawlers -->
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
-<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
-<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
-<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
-<title>Blog - Samridh Gaur</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-<script>
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        colors: {
-          primary: "#019863",
-          "background-light": "#f5f8f7",
-          "background-dark": "#0f231c",
-          "text-light": "#111111",
-          "text-dark": "#e5e7eb",
-          "text-secondary-light": "#6b7280",
-          "text-secondary-dark": "#9ca3af",
-          "border-light": "#e5e7eb",
-          "border-dark": "#2d2d2d"
-        },
-        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
-        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
-      }
-    }
-  };
-  </script>
-<style>
-  .dark .dark-mode-toggle .material-icons { content: "dark_mode"; }
-  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
-  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
-  .brutalist-border { border: 3px solid currentColor; }
-  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
-  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
-  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
-  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
-  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
-  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
-  .post-card { position: relative; }
-  .post-meta { font-family: monospace; }
-  .name-highlight { color: inherit; }
-  .loading-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    border: 3px solid currentColor;
-    border-radius: 9999px;
-    padding: 0.5rem 1.25rem;
-    font-size: 0.875rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-  .loading-dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 9999px;
-    background: currentColor;
-    opacity: 0.25;
-    animation: pulse 1.2s infinite ease-in-out;
-  }
-  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.25; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.35); }
-  }
-  .card-link-cta {
-    position: relative;
-    padding: 4px 0;
-  }
-  .card-link-cta::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    transform: scaleX(0);
-    height: 3px;
-    bottom: -3px;
-    left: 0;
-    background-color: currentColor;
-    transform-origin: bottom right;
-    transition: transform 0.3s ease-out;
-  }
-  .group:hover .card-link-cta::after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-  }
-</style>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥬</text></svg>">
+    <title>Blog - Samridh Gaur</title>
+    <style>
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        body {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 0 10px;
+            font: 18px/1.6 'Geist Mono', monospace;
+            color: #444;
+            background: #fff;
+            transition: background 0.2s, color 0.2s;
+        }
+        body.dark {
+            background: #112233;
+            color: #ddd;
+        }
+        body.black {
+            background: #000;
+            color: #ddd;
+        }
+        h1, h2, h3 {
+            line-height: 1.2;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.5em; }
+        h3 { font-size: 1.2em; }
+        a {
+            color: #07c;
+            text-decoration: none;
+        }
+        body.dark a {
+            color: #5af;
+        }
+        body.black a {
+            color: #ff8c00;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .post-list {
+            list-style: none;
+            padding: 0;
+        }
+        .post-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 1em;
+            gap: 1.5em;
+        }
+        .post-date {
+            color: #888;
+            font-size: 0.9em;
+            min-width: 100px;
+            flex-shrink: 0;
+        }
+        body.dark .post-date {
+            color: #999;
+        }
+        body.black .post-date {
+            color: #888;
+        }
+        .post-title {
+            flex: 1;
+        }
+        article {
+            margin-top: 2em;
+        }
+        article blockquote {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+            border-left: 3px solid #ddd;
+            color: #666;
+            font-style: italic;
+        }
+        body.dark article blockquote {
+            border-left-color: #555;
+            color: #aaa;
+        }
+        body.black article blockquote {
+            border-left-color: #444;
+            color: #999;
+        }
+        article pre {
+            background: #f5f5f5;
+            padding: 1em;
+            overflow-x: auto;
+            border-left: 3px solid #07c;
+        }
+        body.dark article pre {
+            background: #1a2a3a;
+            border-left-color: #5af;
+        }
+        body.black article pre {
+            background: #1a1a1a;
+            border-left-color: #ff8c00;
+        }
+        article code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }
+        body.dark article code {
+            background: #1a2a3a;
+        }
+        body.black article code {
+            background: #1a1a1a;
+        }
+        article pre code {
+            padding: 0;
+            background: none;
+        }
+        article ul, article ol {
+            margin: 1em 0;
+            padding-left: 2em;
+        }
+        article li {
+            margin: 0.5em 0;
+        }
+        .back-link {
+            margin-top: 2em;
+            display: inline-block;
+        }
+        #loading {
+            color: #888;
+            font-style: italic;
+        }
+        body.dark #loading {
+            color: #999;
+        }
+        body.black #loading {
+            color: #888;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 0;
+        }
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        .gita-quote {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 3px solid #07c;
+            background: #f9f9f9;
+            font-style: italic;
+            color: #555;
+        }
+        body.dark .gita-quote {
+            background: #1a2a3a;
+            border-left-color: #5af;
+            color: #aaa;
+        }
+        body.black .gita-quote {
+            background: #111;
+            border-left-color: #ff8c00;
+            color: #999;
+        }
+        .gita-quote-text {
+            margin: 0 0 8px 0;
+            line-height: 1.5;
+        }
+        .gita-quote-ref {
+            font-size: 0.85em;
+            color: #888;
+            font-style: normal;
+        }
+        body.dark .gita-quote-ref {
+            color: #999;
+        }
+        body.black .gita-quote-ref {
+            color: #888;
+        }
+    </style>
 </head>
-<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
-  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
-    <a class="text-xl font-bold brutalist-link" href="index.html">samridh.com<span class="text-primary">~</span></a>
-    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
-      <a class="text-xl brutalist-link" href="index.html">home</a>
-      <a class="text-xl brutalist-link" href="blog.html">blog</a>
-      <a class="text-xl brutalist-link" href="#">resume</a>
-      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
-        <span class="material-icons text-xl">wb_sunny</span>
-      </button>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
+    
+    <header>
+        <nav>
+            <a href="index.html">home</a> |
+            <a href="blog.html">blog</a> |
+            <a href="index.html#contact">contact</a>
+        </nav>
+    </header>
+
+    <div id="blog-list">
+        <h1>Blog</h1>
+        <p>Insights, notes, and deep dives on building, tech, and strategy.</p>
+        <div id="loading">Loading posts...</div>
+        <ul class="post-list" id="posts"></ul>
     </div>
-  </header>
 
-  <main>
-    <section class="mb-16 sm:mb-20 text-center sm:text-left">
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl uppercase font-bold text-black dark:text-white mb-4 leading-none">Blog</h1>
-      <p class="text-xl sm:text-2xl text-black dark:text-white uppercase font-bold max-w-3xl mx-auto sm:mx-0">Insights, notes, and deep dives on building, tech, and strategy.</p>
-    </section>
+    <article id="post-content" style="display:none;">
+        <a href="blog.html" class="back-link">← Back to all posts</a>
+        <div id="post-body"></div>
+        <a href="blog.html" class="back-link">← Back to all posts</a>
+    </article>
 
-    <section class="mb-16 sm:mb-20">
-      <h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">Latest Posts</h2>
+    <hr>
+    <footer>
+        <div id="gita-quote-container"></div>
+        <p>@sxmridhx0 | v1.0.0</p>
+    </footer>
 
-      <div id="posts" class="space-y-6 sm:space-y-8"></div>
-    </section>
-  </main>
-
-  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
-    <span class="uppercase">@sxmridhx0</span>
-    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
-  </footer>
-</div>
-
-<script>
-  const themeToggle = document.getElementById('theme-toggle');
-  const sunIcon = themeToggle.querySelector('span');
-  themeToggle.addEventListener('click', () => {
-    document.documentElement.classList.toggle('dark');
-    if (document.documentElement.classList.contains('dark')) {
-      sunIcon.textContent = 'dark_mode';
-      themeToggle.style.color = 'black';
-      themeToggle.style.backgroundColor = 'white';
-      themeToggle.style.borderColor = 'black';
-      themeToggle.querySelector('span').style.color = 'black';
-    } else {
-      sunIcon.textContent = 'wb_sunny';
-      themeToggle.style.color = 'white';
-      themeToggle.style.backgroundColor = 'black';
-      themeToggle.style.borderColor = 'white';
-      themeToggle.querySelector('span').style.color = 'white';
-    }
-  });
-  if (document.documentElement.classList.contains('dark')) {
-    sunIcon.textContent = 'dark_mode';
-    themeToggle.style.color = 'black';
-    themeToggle.style.backgroundColor = 'white';
-    themeToggle.style.borderColor = 'black';
-    themeToggle.querySelector('span').style.color = 'black';
-  } else {
-    sunIcon.textContent = 'wb_sunny';
-    themeToggle.style.color = 'white';
-    themeToggle.style.backgroundColor = 'black';
-    themeToggle.style.borderColor = 'white';
-    themeToggle.querySelector('span').style.color = 'white';
-  }
-</script>
-
-<script>
-  // Substack RSS integration
-  const RSS_URL = 'https://sxmridh.substack.com/feed';
-  const postsEl = document.getElementById('posts');
-  const CACHE_KEY = 'substack-feed-cache-v2';
-  const CACHE_FRESH_TTL = 1000 * 60 * 30; // 30 minutes - fresh cache
-  const CACHE_STALE_TTL = 1000 * 60 * 60 * 24 * 7; // 7 days - stale but usable
-  const SOURCES = [
-    RSS_URL,
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS_URL) + '&timestamp=' + Date.now(),
-    'https://r.jina.ai/' + RSS_URL
-  ];
-
-  function escapeHtml(str) {
-    return (str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  function readCache() {
-    try {
-      const raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return { xml: null, isFresh: false, isStale: false };
-      const cached = JSON.parse(raw);
-      if (!cached?.timestamp || !cached?.xml) return { xml: null, isFresh: false, isStale: false };
-      
-      const age = Date.now() - cached.timestamp;
-      const isFresh = age <= CACHE_FRESH_TTL;
-      const isStale = age > CACHE_FRESH_TTL && age <= CACHE_STALE_TTL;
-      
-      if (age > CACHE_STALE_TTL) return { xml: null, isFresh: false, isStale: false };
-      return { xml: cached.xml, isFresh, isStale };
-    } catch (err) {
-      console.warn('Failed to read cache', err);
-      return { xml: null, isFresh: false, isStale: false };
-    }
-  }
-
-  function writeCache(xml) {
-    try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ xml, timestamp: Date.now() }));
-    } catch (err) {
-      console.warn('Failed to store cache', err);
-    }
-  }
-
-  async function fetchWithTimeout(url, options = {}, timeout = 8000) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeout);
-    try {
-      const res = await fetch(url, { ...options, signal: controller.signal });
-      if (!res.ok) throw new Error('Request failed: ' + res.status);
-      return await res.text();
-    } finally {
-      clearTimeout(timer);
-    }
-  }
-
-  async function fetchRSS(retries = 2) {
-    let lastErr = null;
-    for (let attempt = 0; attempt <= retries; attempt++) {
-      for (const url of SOURCES) {
-        try {
-          const xml = await fetchWithTimeout(url, { 
-            headers: { 'Accept': 'application/rss+xml,text/xml;q=0.9,*/*;q=0.8' } 
-          });
-          return xml;
-        } catch (err) {
-          lastErr = err;
-          console.warn(`Fetch attempt ${attempt + 1} failed for ${url}:`, err.message);
+    <script>
+        // Simple markdown parser
+        function parseMarkdown(md) {
+            let html = md;
+            
+            // Code blocks (must come before inline code)
+            html = html.replace(/```([a-z]*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+            
+            // Headers
+            html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            
+            // Blockquotes
+            html = html.replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>');
+            
+            // Bold
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            
+            // Italic
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // Links
+            html = html.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2">$1</a>');
+            
+            // Unordered lists
+            html = html.replace(/^\- (.+)$/gim, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            
+            // Ordered lists
+            html = html.replace(/^\d+\. (.+)$/gim, '<li>$1</li>');
+            
+            // Paragraphs (lines separated by blank line)
+            const lines = html.split('\n\n');
+            html = lines.map(line => {
+                line = line.trim();
+                if (!line) return '';
+                if (line.startsWith('<h') || line.startsWith('<ul') || 
+                    line.startsWith('<ol') || line.startsWith('<pre') || 
+                    line.startsWith('<blockquote')) {
+                    return line;
+                }
+                return '<p>' + line.replace(/\n/g, '<br>') + '</p>';
+            }).join('\n');
+            
+            return html;
         }
-      }
-      // Wait before retry with exponential backoff
-      if (attempt < retries) {
-        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
-      }
-    }
-    throw lastErr || new Error('Failed to fetch RSS after retries');
-  }
 
-  function parseItems(xmlText, limit = 6) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlText, 'application/xml');
-    const items = Array.from(doc.querySelectorAll('item')).slice(0, limit);
-    return items.map(item => {
-      const title = item.querySelector('title')?.textContent?.trim() || 'Untitled';
-      const link = item.querySelector('link')?.textContent?.trim() || '#';
-      const pubDate = item.querySelector('pubDate')?.textContent || '';
-      const description = item.querySelector('description')?.textContent || '';
-      const content = item.querySelector('content\\:encoded')?.textContent || description;
-      let image = null;
-      const imgMatch = content && content.match(/<img[^>]+src=["']([^"']+)["']/i);
-      if (imgMatch) image = imgMatch[1];
-      if (!image) {
-        const media = item.querySelector('media\\:content, media\\:thumbnail');
-        if (media) image = media.getAttribute('url');
-      }
-      if (!image) {
-        const enclosure = item.querySelector('enclosure');
-        if (enclosure) image = enclosure.getAttribute('url');
-      }
-      return { title, link, pubDate, image };
-    });
-  }
-
-  function formatDate(pubDate) {
-    const d = new Date(pubDate);
-    if (isNaN(d)) return '';
-    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: '2-digit' }).toUpperCase();
-  }
-
-  function render(posts) {
-    postsEl.innerHTML = '';
-    if (!posts.length) {
-      postsEl.innerHTML = '<div class="text-sm text-gray-500 dark:text-gray-400">No posts found.</div>';
-      return;
-    }
-    posts.forEach(p => {
-      const hasImage = !!p.image;
-      const imgBlock = hasImage ? `
-        <div class="md:col-span-2">
-          <div class="brutalist-border overflow-hidden pointer-events-none">
-            <img src="${escapeHtml(p.image)}" alt="" class="object-cover w-full h-40 sm:h-48 md:h-full"/>
-          </div>
-        </div>` : '';
-
-      const textColClass = hasImage ? 'md:col-span-3' : 'md:col-span-5';
-      const card = document.createElement('a');
-      card.className = 'post-card group block p-6 sm:p-8 brutalist-border text-black dark:text-white';
-      card.href = p.link;
-      card.target = '_blank';
-      card.rel = 'noopener noreferrer';
-      card.innerHTML = `
-        <div class="grid md:grid-cols-5 gap-6 sm:gap-8 items-start">
-          ${imgBlock}
-          <div class="${textColClass} space-y-4 sm:space-y-5">
-            <p class="post-meta text-sm">${escapeHtml(formatDate(p.pubDate))}</p>
-            <h3 class="text-2xl sm:text-3xl uppercase font-bold">${escapeHtml(p.title)}</h3>
-            <span class="inline-flex items-center gap-2 text-base sm:text-lg card-link-cta">Read on Substack →</span>
-          </div>
-        </div>`;
-      postsEl.appendChild(card);
-    });
-  }
-
-  async function initFeed() {
-    const cache = readCache();
-    
-    // Stale-while-revalidate: Always show cached content immediately if available
-    if (cache.xml) {
-      try {
-        const cachedPosts = parseItems(cache.xml, 6);
-        render(cachedPosts);
-        console.log(cache.isFresh ? 'Showing fresh cached posts' : 'Showing stale cached posts');
-      } catch (err) {
-        console.warn('Failed to render cached posts', err);
-      }
-    }
-    
-    // If no cache or cache is stale, show loading state
-    if (!cache.xml) {
-      postsEl.innerHTML = `
-        <div class="flex justify-center">
-          <span class="loading-pill">
-            <span class="loading-dot"></span>
-            <span class="loading-dot"></span>
-            <span class="loading-dot"></span>
-            THINKING
-          </span>
-        </div>`;
-    }
-
-    // Always try to fetch fresh data if cache is not fresh
-    if (!cache.isFresh) {
-      try {
-        const xml = await fetchRSS();
-        writeCache(xml);
-        const posts = parseItems(xml, 6);
-        render(posts);
-        console.log('Updated with fresh posts from Substack');
-      } catch (e) {
-        // If fetch fails and we have no cache, show error
-        if (!cache.xml) {
-          postsEl.innerHTML = '<div class="text-sm text-red-600">Unable to load posts. Please check your connection and try again.</div>';
+        // Fetch markdown posts
+        async function fetchMarkdownPosts() {
+            try {
+                const res = await fetch('posts/posts.json');
+                const posts = await res.json();
+                return posts.map(p => ({
+                    title: p.title,
+                    link: `blog.html?post=${p.id}`,
+                    date: p.date,
+                    source: 'markdown',
+                    id: p.id,
+                    file: p.file
+                }));
+            } catch (err) {
+                console.warn('Failed to fetch markdown posts', err);
+                return [];
+            }
         }
-        console.error('Failed to fetch fresh posts:', e);
-      }
-    }
-  }
 
-  initFeed();
-</script>
+        // Format date consistently
+        function formatDate(dateStr) {
+            try {
+                const d = new Date(dateStr);
+                if (isNaN(d)) return dateStr;
+                return d.toISOString().split('T')[0];
+            } catch {
+                return dateStr;
+            }
+        }
 
-</body></html>
+        // Get post ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('post');
+
+        if (postId) {
+            // Show single post (markdown only)
+            document.getElementById('blog-list').style.display = 'none';
+            document.getElementById('post-content').style.display = 'block';
+            
+            fetch('posts/posts.json')
+                .then(r => r.json())
+                .then(posts => {
+                    const post = posts.find(p => p.id === postId);
+                    if (post) {
+                        document.title = `${post.title} - Samridh Gaur`;
+                        fetch(`posts/${post.file}`)
+                            .then(r => r.text())
+                            .then(md => {
+                                document.getElementById('post-body').innerHTML = parseMarkdown(md);
+                            })
+                            .catch(() => {
+                                document.getElementById('post-body').innerHTML = '<p>Failed to load post.</p>';
+                            });
+                    } else {
+                        document.getElementById('post-body').innerHTML = '<p>Post not found.</p>';
+                    }
+                });
+        } else {
+            // Show markdown post list
+            fetchMarkdownPosts()
+                .then(markdownPosts => {
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    // Sort by date (newest first)
+                    const allPosts = markdownPosts.sort((a, b) => {
+                        const dateA = new Date(a.date);
+                        const dateB = new Date(b.date);
+                        return dateB - dateA;
+                    });
+                    
+                    const postsEl = document.getElementById('posts');
+                    
+                    if (allPosts.length === 0) {
+                        postsEl.innerHTML = '<li>No posts found.</li>';
+                        return;
+                    }
+                    
+                    allPosts.forEach(post => {
+                        const li = document.createElement('li');
+                        li.className = 'post-item';
+                        
+                        const date = formatDate(post.date);
+                        
+                        li.innerHTML = `
+                            <span class="post-date">${date}</span>
+                            <span class="post-title"><a href="${post.link}">${post.title}</a></span>
+                        `;
+                        postsEl.appendChild(li);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('loading').textContent = 'Failed to load posts.';
+                });
+        }
+    </script>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.classList.contains('black') ? 'black' : 
+                               body.classList.contains('dark') ? 'dark' : 'light';
+            
+            // Cycle: light → dark → black → light
+            if (currentTheme === 'light') {
+                body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else if (currentTheme === 'dark') {
+                body.classList.remove('dark');
+                body.classList.add('black');
+                localStorage.setItem('theme', 'black');
+            } else {
+                body.classList.remove('black');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+        } else if (savedTheme === 'black') {
+            document.body.classList.add('black');
+        }
+        
+        // Load daily Bhagavad Gita quote
+        (function() {
+            const MS_PER_DAY = 86400000; // Milliseconds per day
+            
+            function loadQuote() {
+                const quoteContainer = document.getElementById('gita-quote-container');
+                if (!quoteContainer) {
+                    console.error('Quote container not found');
+                    return;
+                }
+                
+                // Add cache busting parameter to ensure fresh load (changes once per day)
+                const cacheBuster = Math.floor(Date.now() / MS_PER_DAY);
+                fetch('bhagavad_gita_quotes.json?v=' + cacheBuster)
+                    .then(r => {
+                        if (!r.ok) throw new Error('Failed to fetch quotes: ' + r.status);
+                        return r.json();
+                    })
+                    .then(quotes => {
+                        if (!quotes || quotes.length === 0) {
+                            throw new Error('No quotes available');
+                        }
+                        // Use current date to select a quote (same quote for the whole day)
+                        const now = new Date();
+                        const startOfYear = new Date(now.getFullYear(), 0, 1);
+                        const dayOfYear = Math.floor((now - startOfYear) / MS_PER_DAY);
+                        const quoteIndex = dayOfYear % quotes.length;
+                        const quote = quotes[quoteIndex];
+                        
+                        quoteContainer.innerHTML = `
+                            <div class="gita-quote">
+                                <p class="gita-quote-text">"${quote.text}"</p>
+                                <p class="gita-quote-ref">— Bhagavad Gita ${quote.chapter}:${quote.verse}</p>
+                            </div>
+                        `;
+                    })
+                    .catch(err => {
+                        console.error('Failed to load quote:', err);
+                        // Show a fallback quote if loading fails
+                        quoteContainer.innerHTML = `
+                            <div class="gita-quote">
+                                <p class="gita-quote-text">"You have a right to perform your prescribed duty, but you are not entitled to the fruits of action."</p>
+                                <p class="gita-quote-ref">— Bhagavad Gita 2:47</p>
+                            </div>
+                        `;
+                    });
+            }
+            
+            // Ensure DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadQuote);
+            } else {
+                loadQuote();
+            }
+        })();
+    </script>
+</body>
+</html>

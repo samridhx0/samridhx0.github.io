@@ -10,11 +10,35 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥬</text></svg>">
     <title>Blog - Samridh Gaur</title>
     <style>
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
         body {
             max-width: 650px;
             margin: 40px auto;
             padding: 0 10px;
-            font: 18px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font: 18px/1.6 'Geist Mono', monospace;
             color: #444;
             background: #fff;
             transition: background 0.2s, color 0.2s;
@@ -158,6 +182,39 @@
             height: 24px;
             fill: currentColor;
         }
+        .gita-quote {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 3px solid #07c;
+            background: #f9f9f9;
+            font-style: italic;
+            color: #555;
+        }
+        body.dark .gita-quote {
+            background: #1a2a3a;
+            border-left-color: #5af;
+            color: #aaa;
+        }
+        body.black .gita-quote {
+            background: #111;
+            border-left-color: #ff8c00;
+            color: #999;
+        }
+        .gita-quote-text {
+            margin: 0 0 8px 0;
+            line-height: 1.5;
+        }
+        .gita-quote-ref {
+            font-size: 0.85em;
+            color: #888;
+            font-style: normal;
+        }
+        body.dark .gita-quote-ref {
+            color: #999;
+        }
+        body.black .gita-quote-ref {
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -190,6 +247,7 @@
 
     <hr>
     <footer>
+        <div id="gita-quote-container"></div>
         <p>@sxmridhx0 | v1.0.0</p>
     </footer>
 
@@ -366,6 +424,62 @@
         } else if (savedTheme === 'black') {
             document.body.classList.add('black');
         }
+        
+        // Load daily Bhagavad Gita quote
+        (function() {
+            const MS_PER_DAY = 86400000; // Milliseconds per day
+            
+            function loadQuote() {
+                const quoteContainer = document.getElementById('gita-quote-container');
+                if (!quoteContainer) {
+                    console.error('Quote container not found');
+                    return;
+                }
+                
+                // Add cache busting parameter to ensure fresh load (changes once per day)
+                const cacheBuster = Math.floor(Date.now() / MS_PER_DAY);
+                fetch('bhagavad_gita_quotes.json?v=' + cacheBuster)
+                    .then(r => {
+                        if (!r.ok) throw new Error('Failed to fetch quotes: ' + r.status);
+                        return r.json();
+                    })
+                    .then(quotes => {
+                        if (!quotes || quotes.length === 0) {
+                            throw new Error('No quotes available');
+                        }
+                        // Use current date to select a quote (same quote for the whole day)
+                        const now = new Date();
+                        const startOfYear = new Date(now.getFullYear(), 0, 1);
+                        const dayOfYear = Math.floor((now - startOfYear) / MS_PER_DAY);
+                        const quoteIndex = dayOfYear % quotes.length;
+                        const quote = quotes[quoteIndex];
+                        
+                        quoteContainer.innerHTML = `
+                            <div class="gita-quote">
+                                <p class="gita-quote-text">"${quote.text}"</p>
+                                <p class="gita-quote-ref">— Bhagavad Gita ${quote.chapter}:${quote.verse}</p>
+                            </div>
+                        `;
+                    })
+                    .catch(err => {
+                        console.error('Failed to load quote:', err);
+                        // Show a fallback quote if loading fails
+                        quoteContainer.innerHTML = `
+                            <div class="gita-quote">
+                                <p class="gita-quote-text">"You have a right to perform your prescribed duty, but you are not entitled to the fruits of action."</p>
+                                <p class="gita-quote-ref">— Bhagavad Gita 2:47</p>
+                            </div>
+                        `;
+                    });
+            }
+            
+            // Ensure DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadQuote);
+            } else {
+                loadQuote();
+            }
+        })();
     </script>
 </body>
 </html>

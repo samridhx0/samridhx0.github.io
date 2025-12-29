@@ -10,11 +10,35 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥬</text></svg>">
     <title>Samridh Gaur</title>
     <style>
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('webfonts/GeistMono-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        
         body {
             max-width: 650px;
             margin: 40px auto;
             padding: 0 10px;
-            font: 18px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font: 18px/1.5 'Geist Mono', monospace;
             color: #444;
             background: #fff;
             transition: background 0.2s, color 0.2s;

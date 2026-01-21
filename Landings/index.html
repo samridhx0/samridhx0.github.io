@@ -1,0 +1,208 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Landing Pages Glossary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1115;
+      --ink: #f0f2f4;
+      --muted: #b6bcc4;
+      --stroke: rgba(255, 255, 255, 0.08);
+      --card: rgba(14, 18, 22, 0.8);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Sora", system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 40px 6vw 24px;
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .title {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      letter-spacing: -0.01em;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    main {
+      padding: 32px 6vw 64px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .card {
+      position: relative;
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      text-decoration: none;
+      color: inherit;
+      transition: border 0.2s ease, background 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(20, 24, 28, 0.9);
+    }
+
+    .thumb {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #11151a;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      aspect-ratio: 16 / 9;
+    }
+
+    .thumb iframe {
+      width: 120%;
+      height: 120%;
+      transform: scale(0.84);
+      transform-origin: top left;
+      border: none;
+      pointer-events: none;
+      background: white;
+    }
+
+    .card .label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="title">Project Glossary</h1>
+    <p class="subtitle">Full-width previews of every page. Click any card to open it in a new tab.</p>
+  </header>
+
+  <main>
+    <section class="grid" id="grid">
+      <a class="card" data-file="hero1.html" data-title="Hero 1" data-tags="hero experimental" href="hero1.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Hero 1 preview" src="hero1.html"></iframe></div>
+        <span class="label">Hero</span>
+        <h3>Hero 1</h3>
+        <p>Compact hero composition with strong CTA focus.</p>
+        <span class="pill">hero</span>
+      </a>
+      <a class="card" data-file="hero2.html" data-title="Hero 2" data-tags="hero bold" href="hero2.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Hero 2 preview" src="hero2.html"></iframe></div>
+        <span class="label">Hero</span>
+        <h3>Hero 2</h3>
+        <p>Split layout with layered typography.</p>
+        <span class="pill">hero</span>
+      </a>
+      <a class="card" data-file="hero4.html" data-title="Hero 4" data-tags="hero dark" href="hero4.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Hero 4 preview" src="hero4.html"></iframe></div>
+        <span class="label">Hero</span>
+        <h3>Hero 4</h3>
+        <p>Dark theme with sculpted visuals.</p>
+        <span class="pill">hero</span>
+      </a>
+      <a class="card" data-file="hero5.html" data-title="Hero 5" data-tags="hero minimal" href="hero5.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Hero 5 preview" src="hero5.html"></iframe></div>
+        <span class="label">Hero</span>
+        <h3>Hero 5</h3>
+        <p>Minimal hero grid with calm rhythm.</p>
+        <span class="pill">hero</span>
+      </a>
+      <a class="card" data-file="hero6.html" data-title="Hero 6" data-tags="hero bright" href="hero6.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Hero 6 preview" src="hero6.html"></iframe></div>
+        <span class="label">Hero</span>
+        <h3>Hero 6</h3>
+        <p>Bright contrast, wide hero band.</p>
+        <span class="pill">hero</span>
+      </a>
+      <a class="card" data-file="hero7.html" data-title="Hero 7" data-tags="hero editorial" href="hero7.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Hero 7 preview" src="hero7.html"></iframe></div>
+        <span class="label">Hero</span>
+        <h3>Hero 7</h3>
+        <p>Editorial hero with expanded typographic scale.</p>
+        <span class="pill">hero</span>
+      </a>
+      <a class="card" data-file="hero8.html" data-title="Hero 8" data-tags="hero gradient" href="hero8.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Hero 8 preview" src="hero8.html"></iframe></div>
+        <span class="label">Hero</span>
+        <h3>Hero 8</h3>
+        <p>Gradient hero with layered depth.</p>
+        <span class="pill">hero</span>
+      </a>
+      <a class="card" data-file="index-2.html" data-title="Index 2" data-tags="landing index" href="index-2.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Index 2 preview" src="index-2.html"></iframe></div>
+        <span class="label">Landing</span>
+        <h3>Index 2</h3>
+        <p>Extended landing exploration with rich sections.</p>
+        <span class="pill">index</span>
+      </a>
+      <a class="card" data-file="index-3.html" data-title="Index 3" data-tags="landing index" href="index-3.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Index 3 preview" src="index-3.html"></iframe></div>
+        <span class="label">Landing</span>
+        <h3>Index 3</h3>
+        <p>Alternate layout with more visual density.</p>
+        <span class="pill">index</span>
+      </a>
+      <a class="card" data-file="index-4.html" data-title="Index 4" data-tags="landing index" href="index-4.html" target="_blank" rel="noreferrer">
+        <div class="thumb"><iframe title="Index 4 preview" src="index-4.html"></iframe></div>
+        <span class="label">Landing</span>
+        <h3>Index 4</h3>
+        <p>Responsive landing with lighter sections.</p>
+        <span class="pill">index</span>
+      </a>
+    </section>
+  </main>
+
+</body>
+</html>

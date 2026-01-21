@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Creative Assets</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #010409;
+            color: #e6edf3;
+        }
+        .text-gradient {
+            background: linear-gradient(180deg, #FFFFFF 0%, #B3B3B3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+        .radial-gradient {
+            background: radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.18) 0%, rgba(1, 4, 9, 0) 45%);
+            pointer-events: none;
+        }
+        .icon-circle {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: rgba(255, 255, 255, 0.03);
+            transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .icon-circle:hover, .icon-circle:focus {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.22);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(2,6,23,0.6);
+        }
+        .active-icon-circle {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.2);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.18);
+        }
+        /* Focus ring for accessibility */
+        :focus {
+            outline: none;
+        }
+        [tabindex]:focus, button:focus, a:focus {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12), 0 8px 20px rgba(2,6,23,0.6);
+            border-radius: 8px;
+        }
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .icon-circle, .active-icon-circle, button { transition: none !important; }
+        }
+        .nav-item:hover {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<header class="w-full py-4 px-6 sm:px-8 fixed top-0 z-50 bg-transparent">
+    <div class="container mx-auto flex justify-between items-center">
+<div class="flex items-center space-x-8">
+<div class="bg-white rounded-full p-2">
+<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2 17L12 22L22 17" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2 12L12 17L22 12" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+            <nav class="hidden md:flex items-center space-x-6 text-sm text-gray-400" aria-label="Primary">
+<a class="nav-item" href="#">Catalog</a>
+<a class="nav-item" href="#">Marketplace</a>
+<a class="nav-item" href="#">Company</a>
+<a class="nav-item" href="#">Thumb</a>
+<a class="nav-item" href="#">Work with us</a>
+<a class="nav-item" href="#">Pricing</a>
+            </nav>
+            <!-- Mobile menu button -->
+            <button id="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" class="md:hidden text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-2">
+                <span class="material-icons">menu</span>
+            </button>
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-gray-400 hover:text-white">
+<span class="material-icons">search</span>
+</button>
+<a class="text-gray-400 hover:text-white text-sm" href="#">Login</a>
+<a class="bg-white text-black text-sm font-medium py-2 px-4 rounded-full hover:bg-gray-200" href="#">Sign Up</a>
+</div>
+</div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 bg-opacity-60 backdrop-blur-sm absolute top-full left-0 right-0 z-40 shadow-lg rounded-b-lg mx-4 mt-2">
+            <div class="flex flex-col p-4 space-y-3 text-gray-300 text-sm">
+                <a class="px-3 py-2 rounded hover:bg-gray-800" href="#">Catalog</a>
+                <a class="px-3 py-2 rounded hover:bg-gray-800" href="#">Marketplace</a>
+                <a class="px-3 py-2 rounded hover:bg-gray-800" href="#">Company</a>
+                <a class="px-3 py-2 rounded hover:bg-gray-800" href="#">Thumb</a>
+                <a class="px-3 py-2 rounded hover:bg-gray-800" href="#">Work with us</a>
+                <a class="px-3 py-2 rounded hover:bg-gray-800" href="#">Pricing</a>
+            </div>
+        </div>
+</header>
+    <script>
+        // Toggle mobile menu accessibility
+        (function(){
+            var btn = document.getElementById('menu-toggle');
+            var menu = document.getElementById('mobile-menu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function(){
+                var expanded = btn.getAttribute('aria-expanded') === 'true';
+                btn.setAttribute('aria-expanded', String(!expanded));
+                menu.classList.toggle('hidden');
+            });
+            // Close on escape
+            document.addEventListener('keydown', function(e){
+                if (e.key === 'Escape'){
+                    btn.setAttribute('aria-expanded', 'false');
+                    menu.classList.add('hidden');
+                }
+            });
+        })();
+    </script>
+<main class="flex-grow flex flex-col items-center justify-center text-center relative pt-28 pb-16 px-4 sm:px-8">
+    <div class="relative z-10 max-w-4xl w-full">
+<span class="inline-block bg-gray-800 text-gray-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">Creative Assets</span>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gradient">Elevate Your<br/>Design Workflow</h1>
+            <p class="max-w-3xl mx-auto text-gray-400 text-base sm:text-lg mb-8">
+                Discover premium 3D assets, illustrations, and templates designed to speed up and inspire your creative process.
+            </p>
+            <div class="flex justify-center">
+                <button class="bg-gray-200 text-black font-medium py-3 px-6 rounded-lg flex items-center hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Explore Catalog
+                <span class="material-icons ml-2">arrow_forward_ios</span>
+                </button>
+            </div>
+</div>
+        <div class="absolute bottom-0 w-full h-3/4 radial-gradient"></div>
+    <div class="w-full mt-12 md:mt-20 relative z-10 flex flex-wrap justify-center items-end gap-4 md:gap-8">
+            <div class="icon-circle p-3 md:p-4 rounded-full text-gray-400" role="img" aria-label="Gestures">
+<span class="material-icons text-3xl">gesture</span>
+</div>
+            <div class="icon-circle p-3 md:p-4 rounded-full text-gray-400" role="img" aria-label="Title">
+<span class="material-icons text-3xl">title</span>
+</div>
+            <div class="icon-circle p-3 md:p-4 rounded-full text-gray-400" role="img" aria-label="Apps">
+<span class="material-icons text-3xl">apps</span>
+</div>
+<div class="relative">
+                <div class="active-icon-circle p-5 md:p-6 rounded-full text-blue-400" role="img" aria-label="Brand">
+<svg class="text-white" fill="none" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+<path d="M4.5 14L2 12.5V17L12 22L22 17V12.5L19.5 14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+                </div>
+            </div>
+            <div class="icon-circle p-3 md:p-4 rounded-full text-gray-400" role="img" aria-label="Auto Fix">
+<span class="material-icons text-3xl">auto_fix_high</span>
+</div>
+            <div class="icon-circle p-3 md:p-4 rounded-full text-gray-400" role="img" aria-label="Grid View">
+<span class="material-icons text-3xl">grid_view</span>
+</div>
+            <div class="icon-circle p-3 md:p-4 rounded-full text-gray-400" role="img" aria-label="Code">
+<span class="material-icons text-3xl">code</span>
+</div>
+        </div>
+</main>
+
+<!-- Design Philosophy Section -->
+<section class="w-full max-w-4xl mx-auto px-6 py-10 mt-8 bg-gray-900 bg-opacity-40 rounded-2xl shadow-lg text-left">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-3 text-gradient">Our Design Philosophy</h2>
+    <p class="text-gray-300 mb-4 text-base sm:text-lg">We believe great design empowers creativity and drives innovation. Our platform is built on the following principles:</p>
+    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-400 list-disc pl-5">
+        <li><span class="font-medium text-white">Creativity First:</span> Every element is crafted to inspire and enable creative professionals to do their best work.</li>
+        <li><span class="font-medium text-white">Clarity & Simplicity:</span> We value clean layouts, intuitive navigation, and minimal distractions for a seamless user experience.</li>
+        <li><span class="font-medium text-white">Accessibility:</span> Our assets and interface are designed to be usable by everyone, regardless of ability or device.</li>
+        <li><span class="font-medium text-white">Performance:</span> Fast load times and responsive interactions are essential for modern workflows.</li>
+        <li><span class="font-medium text-white">Community & Collaboration:</span> We foster a space where designers can share, learn, and grow together.</li>
+    </ul>
+</section>
+
+<footer class="w-full mt-12 py-6 text-gray-400 text-sm text-center">
+    <div class="container mx-auto">© <span id="year"></span> Creative Assets — Built for designers, by designers.</div>
+</footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+</body></html>

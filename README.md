@@ -2,18 +2,16 @@
 
 A minimal, efficient, and beautiful markdown-based blog system built with pure HTML, CSS, and vanilla JavaScript.
 
-**Live on branch: `copilot/markdown-blog-system`**
-
 ## Features
 
-- ✅ **Pure Markdown**: Write posts in simple `.md` files
-- ✅ **No Build Process**: No webpack, no babel, no compilation
-- ✅ **Lightweight Parser**: Custom markdown parser in ~60 lines of JS
-- ✅ **Accessible**: Semantic HTML, keyboard navigation, screen reader friendly
-- ✅ **Beautiful Typography**: Clean, readable design with thoughtful spacing
-- ✅ **Fast**: Minimal JavaScript, instant page loads
-- ✅ **Git-Friendly**: Version control your content with ease
-- ✅ **Simple URLs**: Clean post URLs with query parameters
+-  **Pure Markdown**: Write posts in simple `.md` files
+-  **No Build Process**: No webpack, no babel, no compilation
+-  **Lightweight Parser**: Custom markdown parser in ~60 lines of JS
+-  **Accessible**: Semantic HTML, keyboard navigation, screen reader friendly
+-  **Beautiful Typography**: Clean, readable design with thoughtful spacing
+-  **Fast**: Minimal JavaScript, instant page loads
+-  **Git-Friendly**: Version control your content with ease
+-  **Simple URLs**: Clean post URLs with query parameters
 
 ## How It Works
 
@@ -99,32 +97,7 @@ The blog uses minimal CSS for maximum readability:
 - Screen reader friendly
 - Works without JavaScript (graceful degradation)
 
-## Deployment
-
-Deploy to GitHub Pages, Netlify, Vercel, or any static hosting:
-
-```bash
-git add .
-git commit -m "Add new post"
-git push
-```
 
 That's it! No build step, no deployment pipeline.
 
-## Future Enhancements (Optional)
-
-Keep it simple, but if you want to add features:
-
-- **RSS Feed**: Generate `feed.xml` from `posts.json`
-- **Search**: Simple client-side search through posts
-- **Tags/Categories**: Add to `posts.json` metadata
-- **Dark Mode**: Add CSS variables and toggle
-- **Syntax Highlighting**: Add Prism.js or highlight.js
-
-## Philosophy
-
-This blog system embodies the principle of **simplicity at the core**:
-
-> "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away." — Antoine de Saint-Exupéry
-
-Focus on writing. Everything else is optional.
+> "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away." - Antoine de Saint-Exupéry

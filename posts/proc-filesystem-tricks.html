@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>your /proc is a goldmine - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">MARCH 15, 2025 &nbsp;&nbsp; <span class="tag">LINUX</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">YOUR /PROC IS A GOLDMINE. YOU JUST DON'T KNOW IT YET.</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          /proc is not a real filesystem. Nothing in it lives on disk. It's a window the kernel synthesizes on-demand every time you open a file there. Read <code>/proc/meminfo</code> and the kernel generates that output in real time from its internal memory accounting structures. There's no inode, no sectors, no persistence.
+        </p>
+        <p>
+          Most people know <code>/proc/cpuinfo</code> and maybe <code>/proc/meminfo</code>. The per-process directories under <code>/proc/PID/</code> are where it gets interesting, and where most sysadmins leave a lot on the table.
+        </p>
+
+        <h2>Reading a process's memory layout</h2>
+        <pre><code>cat /proc/$(pgrep firefox)/maps</code></pre>
+        <p>Output looks like this:</p>
+        <pre><code>7f4a2c000000-7f4a2c021000 r--p 00000000 fd:01 1234567 /usr/lib/x86_64-linux-gnu/libc.so.6
+7f4a2c021000-7f4a2c179000 r-xp 00021000 fd:01 1234567 /usr/lib/x86_64-linux-gnu/libc.so.6
+7f4ab0000000-7f4ab0800000 rw-p 00000000 00:00 0</code></pre>
+        <p>
+          Each line is an address range, permissions, file offset, device, inode, and path. The <code>p</code> in permissions means private (copy-on-write). An <code>s</code> means shared. Anonymous mappings have no path — those are heap regions, stack, and raw mmap'd memory. If you see a writable+executable anonymous region, that's worth looking at.
+        </p>
+
+        <h2>Open file descriptors</h2>
+        <pre><code>ls -la /proc/$(pgrep sshd | head -1)/fd</code></pre>
+        <p>
+          Every open file, socket, pipe, and device node shows up here as a symlink. Sockets appear as <code>socket:[inode]</code>. Cross-reference those inodes with <code>/proc/net/tcp</code> to get the actual connection details. This is how tools like <code>lsof</code> work — they just automate what you can do manually right here.
+        </p>
+        <p>One particularly useful pattern: if a process has a file open that's been deleted from the filesystem, it shows up here as <code>/path/to/file (deleted)</code>. That's not an accident — that's a running process that erased its own binary. Malware does this routinely.</p>
+
+        <h2>Environment variables at runtime</h2>
+        <pre><code>cat /proc/1234/environ | tr '\0' '\n'</code></pre>
+        <p>
+          Environment variables in /proc are null-byte separated. The <code>tr '\0' '\n'</code> makes it human-readable. This is useful when you want to see what secrets got passed into a running process — AWS credentials, API tokens, database passwords. If a process inherited them from its parent, they'll be here.
+        </p>
+        <p>Note: reading another process's environ requires either being root or having the same UID.</p>
+
+        <h2>Network connections without netstat</h2>
+        <pre><code>cat /proc/net/tcp</code></pre>
+        <p>
+          The output is in hex, little-endian. Column two is the local address and column three is the remote address, formatted as <code>XXXXXXXX:PPPP</code> where the first part is the IP and the second is the port.
+        </p>
+        <p>Decode it manually:</p>
+        <pre><code>awk 'NR>1 {print $2, $3, $4}' /proc/net/tcp | while read local remote state; do
+  python3 -c "
+import socket, struct
+def decode(h):
+    ip, port = h.split(':')
+    ip = socket.inet_ntoa(struct.pack('<I', int(ip, 16)))
+    return f'{ip}:{int(port, 16)}'
+print(decode('$local'), '->', decode('$remote'), 'state=$state')
+" 2>/dev/null
+done</code></pre>
+        <p>State <code>0A</code> means LISTEN. <code>01</code> is ESTABLISHED. This is exactly what <code>ss</code> and <code>netstat</code> read under the hood.</p>
+
+        <h2>Detecting if a process is being traced</h2>
+        <pre><code>grep TracerPid /proc/$$/status</code></pre>
+        <p>
+          If TracerPid is non-zero, something is attached to that process with ptrace — a debugger, strace, or something less legitimate. This is how CTF challenges implement anti-debug checks, and it's also how you can quickly check whether a suspicious process on a production box is being monitored.
+        </p>
+        <pre><code># Check a specific PID
+grep TracerPid /proc/1337/status
+# TracerPid: 0      <- not being traced
+# TracerPid: 4567   <- PID 4567 is attached</code></pre>
+
+        <h2>Kernel parameters you can flip live</h2>
+        <pre><code># Let non-root users read dmesg
+echo 0 > /proc/sys/kernel/dmesg_restrict
+
+# Disable ASLR temporarily (useful for debugging)
+echo 0 > /proc/sys/kernel/randomize_va_space
+
+# Check how many file handles are open vs the system max
+cat /proc/sys/fs/file-nr</code></pre>
+        <p>These changes are not persistent — they vanish on reboot. For persistence, use <code>sysctl.conf</code> or drop a file in <code>/etc/sysctl.d/</code>.</p>
+
+        <h2>Finding deleted-but-running processes</h2>
+        <pre><code>ls -la /proc/*/exe 2>/dev/null | grep deleted</code></pre>
+        <p>
+          The <code>/proc/PID/exe</code> symlink points to the binary that launched the process. If the binary was deleted after launch, the symlink still exists but the path shows <code>(deleted)</code>. This is one of the faster ways to spot self-deleting malware without pulling in a full forensics toolkit.
+        </p>
+
+        <h2>One more: namespace inspection</h2>
+        <pre><code># See what namespaces a process is in
+ls -la /proc/$(pgrep dockerd | head -1)/ns/</code></pre>
+        <p>
+          Each symlink in <code>/proc/PID/ns/</code> represents a namespace (network, mount, pid, uts, ipc, user). Two processes that share the same inode number for a given namespace are in the same namespace. This is useful when debugging container escapes or just understanding what's isolated from what.
+        </p>
+        <p>/proc is already on your system. It doesn't need installing. Next time you reach for a monitoring tool, check if the answer is already sitting in a file under /proc first.</p>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

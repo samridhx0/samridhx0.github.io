@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>The Unix philosophy is still right - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+  .blockquote { border-left: 4px solid currentColor; padding-left: 1.25rem; margin-bottom: 1.75rem; opacity: 0.85; font-style: italic; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">DECEMBER 15, 2024 &nbsp;&nbsp; <span class="tag">LINUX</span> &nbsp; <span class="tag">SYSTEMS</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">THE UNIX PHILOSOPHY IS STILL THE BEST SOFTWARE DESIGN DOC EVER WRITTEN</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          Doug McIlroy wrote it in 1978. Three rules:
+        </p>
+        <div class="blockquote">
+          <p>Write programs that do one thing and do it well.</p>
+          <p>Write programs to work together.</p>
+          <p>Write programs to handle text streams, because that is a universal interface.</p>
+        </div>
+        <p>
+          That's 46 years old. Predates the web. Predates personal computers as most people know them. Still a better framework for software design than most of what gets published today.
+        </p>
+        <p>
+          This isn't nostalgia. It's a claim about what makes software last and scale, backed by what's actually outlived what.
+        </p>
+
+        <h2>The pipe is the original microservices</h2>
+        <pre><code># Find the top 20 IPs hitting your nginx API endpoints
+cat /var/log/nginx/access.log \
+  | grep "POST /api" \
+  | awk '{print $1}' \
+  | sort \
+  | uniq -c \
+  | sort -rn \
+  | head -20</code></pre>
+        <p>
+          Six programs. No shared state. No API contracts. No shared libraries. No protobuf schema. They communicate through one interface: a stream of bytes on stdout/stdin. You can swap out any stage without touching the others. You can insert a new filter anywhere. You can replace <code>awk</code> with <code>cut</code> or a Python one-liner without breaking anything.
+        </p>
+        <p>
+          This is microservices. The Unix people built this pattern in the 1970s with text and file descriptors. The modern industry reinvented it with HTTP, containers, and service meshes — and somehow made it more complicated.
+        </p>
+
+        <h2>Everything is a file</h2>
+        <pre><code># Read CPU temperature (Raspberry Pi / embedded Linux)
+cat /sys/class/thermal/thermal_zone0/temp
+
+# Write to a serial device
+echo "AT+CMGF=1" > /dev/ttyUSB0
+
+# Read from a webcam (frame capture)
+ffmpeg -i /dev/video0 -frames:v 1 screenshot.png
+
+# Open a TCP connection as a file descriptor
+exec 3&lt;&gt;/dev/tcp/example.com/80
+echo -e "GET / HTTP/1.0\r\nHost: example.com\r\n\r\n" &gt;&3
+cat &lt;&3
+exec 3&gt;&-</code></pre>
+        <p>
+          Devices, hardware counters, kernel internal state, process information, sockets — all exposed as file paths. The same four operations — open, read, write, close — work for all of them. One abstraction, universally applicable.
+        </p>
+        <p>
+          You write shell scripts that manipulate sensor data, network connections, and process state using the exact same syntax. There's no "GPIO library" you need to learn. It's just a file.
+        </p>
+
+        <h2>Where Windows got it wrong</h2>
+        <p>
+          The Windows Registry is a hierarchical binary database that acts as the global configuration store for the entire OS, all applications, all hardware state, and all user preferences. It requires special tools to read (<code>regedit</code>, <code>reg query</code>). The format is opaque. When it breaks, the system often can't boot. You can't <code>grep</code> it, can't <code>diff</code> it, can't put it in a git repo.
+        </p>
+        <p>
+          Compare: on Linux, configuration lives in <code>/etc/</code>. Text files. Every tool ever written can read them. You grep them, diff them, version-control them, copy them to a new machine with <code>scp</code>, template them with Ansible, validate them with standard parsers. The configuration format for nginx is different from the one for sshd which is different from the one for cron, and that's fine — because they're all just text files your existing tools can handle.
+        </p>
+        <p>
+          DLL Hell was the Windows manifestation of the opposite of "do one thing." Shared libraries in a flat namespace, fighting over versions, no stable ABI guarantees, application installers that would overwrite system DLLs to get the version they needed. The Unix approach of package managers, versioned shared library names (<code>libfoo.so.2</code>), and static linking as an escape hatch handled this better.
+        </p>
+
+        <h2>The composability test</h2>
+        <p>A useful test for any system: can you compose it with things that don't know about it?</p>
+        <pre><code># These tools don't know about each other, but compose trivially:
+ps aux | awk '{print $1}' | sort | uniq -c | sort -rn
+# "which users have the most processes running right now"
+
+# This works because ps writes to stdout, awk reads from stdin
+# They share one interface: text</code></pre>
+        <p>
+          Contrast with a system designed as a monolith: to get user process counts, you'd open a management console, navigate to a metrics section, filter by user, export to CSV, open in Excel. The data is trapped inside the system's interface. It doesn't compose.
+        </p>
+
+        <h2>The rule that aged worst: text streams</h2>
+        <p>
+          McIlroy's third rule — text as the universal interface — is the one that aged most visibly. Protocol Buffers, MessagePack, and Apache Avro are more precise than newline-delimited text for structured data. A <code>grep</code> over protobuf output is not how you query it.
+        </p>
+        <p>
+          But the rule was never about text specifically. It was about having a universal interface at all — something everything can produce and consume without negotiation. In 1978, text was the only practical universal interface. Today you'd argue for JSON or binary protocols. The principle holds; the implementation detail (text) doesn't need to.
+        </p>
+
+        <h2>Why it still matters</h2>
+        <p>
+          The systems that aged well — Git, nginx, PostgreSQL, SQLite — all have clear scope and clean interfaces. Git doesn't manage your CI/CD pipeline. nginx doesn't manage your certificates (well, the modern additions do, but the core doesn't). PostgreSQL doesn't tell your application how to query it beyond SQL.
+        </p>
+        <p>
+          The systems that didn't age well — early enterprise Java middleware, COM objects, DCOM, CORBA — tried to be everything and define all interfaces. They accreted complexity in proportion to the number of problems they tried to solve.
+        </p>
+        <p>
+          "Do one thing and do it well" is boring to say and hard to enforce. Every project eventually encounters a feature request that seems adjacent enough to justify expanding scope. The ones that hold the line outlast the ones that don't.
+        </p>
+        <p>
+          The philosophy isn't Unix-specific. It's a set of constraints that produce durable software. That's why it's still worth reading.
+        </p>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

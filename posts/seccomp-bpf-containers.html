@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>seccomp-bpf for containers - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">JANUARY 5, 2025 &nbsp;&nbsp; <span class="tag">SECURITY</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">SECCOMP-BPF: THE SYSCALL FILTER YOUR CONTAINERS ACTUALLY NEED</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          seccomp shipped in Linux 2.6.12 in 2005. The original mode was savage: a process could only call <code>read()</code>, <code>write()</code>, <code>exit()</code>, and <code>sigreturn()</code>. Anything else triggered <code>SIGKILL</code>. No exceptions. Useful for running untrusted binary blobs in an extremely narrow box, basically unusable for anything real.
+        </p>
+        <p>
+          seccomp-bpf landed in 3.5 in 2012 and changed everything. Instead of the binary allow/kill mode, you write a BPF (Berkeley Packet Filter) program that inspects each syscall number and arguments, then returns a disposition: <code>ALLOW</code>, <code>ERRNO</code>, <code>KILL</code>, <code>TRAP</code>, or <code>TRACE</code>.
+        </p>
+        <p>
+          That flexibility made seccomp practical. Today it's used by Chrome's renderer sandbox, Docker's default container profile, Kubernetes pods, and Android apps running on the zygote process.
+        </p>
+
+        <h2>What Docker blocks by default</h2>
+        <p>
+          Docker's default seccomp profile blocks around 44 syscalls. Some notable ones:
+        </p>
+        <ul>
+          <li><code>ptrace</code> — blocks debugger attachment and process injection</li>
+          <li><code>keyctl</code>, <code>add_key</code>, <code>request_key</code> — kernel keyring access</li>
+          <li><code>perf_event_open</code> — hardware performance counters (used in some side-channel attacks)</li>
+          <li><code>reboot</code>, <code>kexec_load</code> — obvious</li>
+          <li><code>mount</code>, <code>umount2</code> — filesystem mounting</li>
+          <li><code>syslog</code> — kernel log</li>
+          <li><code>clock_settime</code> — setting system time</li>
+          <li><code>pivot_root</code> — changing root filesystem</li>
+        </ul>
+        <pre><code># Run without any seccomp filtering (for comparison / debugging)
+docker run --security-opt seccomp=unconfined ubuntu bash
+
+# Try something that the default profile blocks
+docker run ubuntu strace ls
+# strace: ptrace(PTRACE_TRACEME, ...): Operation not permitted</code></pre>
+
+        <h2>Finding your process's actual syscall set</h2>
+        <p>Before writing a profile, you need to know what syscalls your application actually makes. <code>strace -c</code> is the fastest way:</p>
+        <pre><code># Run with syscall counting
+strace -c -f ./mybinary 2>&1
+
+# Output looks like:
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 41.23    0.000841          14        60           read
+ 28.91    0.000590           7        82           write
+ 12.44    0.000254           6        43           openat
+...
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.002040                   312        18 total</code></pre>
+        <p>
+          Take that list, filter out the error-only ones that are expected, and you have your allow-list.
+        </p>
+
+        <h2>Writing a minimal seccomp profile</h2>
+        <p>Docker's seccomp profiles are JSON. The format is an OCI spec extension:</p>
+        <pre><code>{
+  "defaultAction": "SCMP_ACT_ERRNO",
+  "architectures": ["SCMP_ARCH_X86_64", "SCMP_ARCH_X86", "SCMP_ARCH_X32"],
+  "syscalls": [
+    {
+      "names": [
+        "read", "write", "open", "close", "stat", "fstat", "lstat",
+        "mmap", "mprotect", "munmap", "brk", "exit_group", "futex",
+        "set_tid_address", "set_robust_list", "rt_sigaction",
+        "rt_sigprocmask", "arch_prctl", "pread64", "access",
+        "execve", "openat", "getdents64", "newfstatat", "ioctl",
+        "getpid", "gettid", "clock_gettime", "nanosleep"
+      ],
+      "action": "SCMP_ACT_ALLOW"
+    }
+  ]
+}</code></pre>
+        <pre><code># Apply it
+docker run --security-opt seccomp=/path/to/profile.json myimage</code></pre>
+        <p>
+          <code>defaultAction: SCMP_ACT_ERRNO</code> means any syscall NOT in the allow-list returns <code>EPERM</code> instead of killing the process. This is more debuggable than <code>SCMP_ACT_KILL</code> — you'll see the permission error in logs rather than a sudden crash.
+        </p>
+
+        <h2>In Kubernetes</h2>
+        <pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+spec:
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault   # Docker/containerd's default profile
+  containers:
+  - name: myapp
+    image: myapp:latest
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true</code></pre>
+        <p>
+          <code>RuntimeDefault</code> applies the container runtime's default seccomp profile. Before Kubernetes 1.27, the default was <code>Unconfined</code> — no filtering at all. If you're running older clusters, this is something to audit.
+        </p>
+        <p>For a custom profile, put the JSON file on the node at a path under <code>/var/lib/kubelet/seccomp/</code> and reference it with <code>type: Localhost</code>.</p>
+
+        <h2>Bypasses worth knowing</h2>
+        <p>seccomp-bpf is strong but not magic:</p>
+        <ul>
+          <li>
+            <strong>32-bit syscall confusion:</strong> On x86_64, if a process can switch to 32-bit mode (via a <code>far call</code> or crafted <code>int 0x80</code>), it uses 32-bit syscall numbers which are different from 64-bit ones. A profile that only adds <code>SCMP_ARCH_X86_64</code> architecture may not cover 32-bit syscalls.
+          </li>
+          <li>
+            <strong>Argument TOCTOU:</strong> seccomp inspects syscall arguments at the BPF evaluation point, but pointer arguments point into process memory. For some syscalls, a racing write to that memory could change the argument after the BPF check but before the kernel processes it. Limited practical impact but worth knowing for advanced policy writing.
+          </li>
+          <li>
+            <strong>Allowed-but-abusable syscalls:</strong> <code>memfd_create</code> creates an anonymous memory-backed file descriptor. Combined with <code>fexecve</code>, you can run a binary entirely in memory without touching the filesystem. This uses only allowed syscalls in most profiles. Legitimate use case for runtime loaders, illegitimate use case for fileless malware.
+          </li>
+        </ul>
+        <pre><code># Detect memfd-based execution in a running system
+ls -la /proc/*/exe 2>/dev/null | grep memfd
+# or
+ls -la /proc/*/fd/* 2>/dev/null | grep memfd</code></pre>
+
+        <h2>The audit workflow</h2>
+        <pre><code># 1. Profile the application's syscall set
+strace -c -f -o /tmp/syscalls.txt ./myapp
+
+# 2. Build a minimal JSON profile from the output
+# (manual for now, tools like oci-seccomp-bpf-hook automate this)
+
+# 3. Test with SCMP_ACT_LOG instead of KILL to see violations in syslog
+# (requires kernel 4.14+)
+
+# 4. Check violations
+journalctl -k | grep seccomp</code></pre>
+        <p>
+          The default Docker profile is a reasonable baseline. For production workloads where you know the exact syscall set, a custom minimal profile significantly reduces the kernel attack surface exposed to a compromised container.
+        </p>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

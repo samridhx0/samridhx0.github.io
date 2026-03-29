@@ -115,8 +115,12 @@
     </section>
 
     <section class="mb-16 sm:mb-20">
-      <h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">Latest Posts</h2>
+      <h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">Posts</h2>
+      <div id="local-posts" class="space-y-6 sm:space-y-8"></div>
+    </section>
 
+    <section class="mb-16 sm:mb-20">
+      <h2 class="text-3xl sm:text-4xl uppercase font-bold text-black dark:text-white mb-8 sm:mb-10 text-center sm:text-left">From Substack</h2>
       <div id="posts" class="space-y-6 sm:space-y-8"></div>
     </section>
   </main>
@@ -162,7 +166,89 @@
 </script>
 
 <script>
-  // Substack RSS integration
+  // Local posts — rendered immediately, no network required
+  const LOCAL_POSTS = [
+    {
+      title: "YOUR /PROC IS A GOLDMINE. YOU JUST DON'T KNOW IT YET.",
+      link: "posts/proc-filesystem-tricks.html",
+      pubDate: "MARCH 15, 2025",
+      tag: "LINUX"
+    },
+    {
+      title: "PTRACE: THE SYSCALL THAT RUNS YOUR DEBUGGER AND YOUR ROOTKIT",
+      link: "posts/ptrace-the-dangerous-syscall.html",
+      pubDate: "FEBRUARY 28, 2025",
+      tag: "SECURITY"
+    },
+    {
+      title: "LIVING IN /TMP: PERSISTENCE TRICKS EVERY RED TEAMER KNOWS",
+      link: "posts/linux-persistence-red-team.html",
+      pubDate: "FEBRUARY 10, 2025",
+      tag: "RED TEAM"
+    },
+    {
+      title: "OPEN SOURCE IS EATING ITSELF: THE VC CAPTURE PROBLEM",
+      link: "posts/open-source-vc-capture.html",
+      pubDate: "JANUARY 20, 2025",
+      tag: "OPEN SOURCE"
+    },
+    {
+      title: "SECCOMP-BPF: THE SYSCALL FILTER YOUR CONTAINERS ACTUALLY NEED",
+      link: "posts/seccomp-bpf-containers.html",
+      pubDate: "JANUARY 5, 2025",
+      tag: "SECURITY"
+    },
+    {
+      title: "THE UNIX PHILOSOPHY IS STILL THE BEST SOFTWARE DESIGN DOC EVER WRITTEN",
+      link: "posts/unix-philosophy-still-right.html",
+      pubDate: "DECEMBER 15, 2024",
+      tag: "LINUX"
+    },
+    {
+      title: "LSOF IS A MALWARE DETECTOR AND NOBODY TOLD YOU",
+      link: "posts/lsof-malware-detector.html",
+      pubDate: "DECEMBER 1, 2024",
+      tag: "SECURITY"
+    },
+    {
+      title: "WHY YOUR IPTABLES RULES DIE ON REBOOT (AND HOW TO FIX THAT FOREVER)",
+      link: "posts/iptables-persistence.html",
+      pubDate: "NOVEMBER 20, 2024",
+      tag: "LINUX"
+    },
+    {
+      title: "CONTAINERS ARE JUST LINUX NAMESPACES. HERE'S THE PROOF.",
+      link: "posts/linux-namespaces-containers.html",
+      pubDate: "NOVEMBER 5, 2024",
+      tag: "LINUX"
+    },
+    {
+      title: "WHAT'S ACTUALLY INSIDE YOUR ELF BINARY (AND WHY MALWARE CARES)",
+      link: "posts/elf-binary-internals.html",
+      pubDate: "OCTOBER 18, 2024",
+      tag: "SECURITY"
+    }
+  ];
+
+  (function renderLocalPosts() {
+    const container = document.getElementById('local-posts');
+    if (!container) return;
+    LOCAL_POSTS.forEach(p => {
+      const card = document.createElement('a');
+      card.className = 'post-card group block p-6 sm:p-8 brutalist-border text-black dark:text-white';
+      card.href = p.link;
+      card.innerHTML = `
+        <div class="space-y-4 sm:space-y-5">
+          <p class="post-meta text-sm">${p.pubDate} &nbsp;&nbsp; <span style="font-family:monospace;font-size:0.75rem;border:2px solid currentColor;padding:2px 8px;text-transform:uppercase;letter-spacing:0.1em;">${p.tag}</span></p>
+          <h3 class="text-2xl sm:text-3xl uppercase font-bold">${p.title}</h3>
+          <span class="inline-flex items-center gap-2 text-base sm:text-lg card-link-cta">Read Post &rarr;</span>
+        </div>`;
+      container.appendChild(card);
+    });
+  })();
+</script>
+
+
   const RSS_URL = 'https://sxmridh.substack.com/feed';
   const postsEl = document.getElementById('posts');
   const CACHE_KEY = 'substack-feed-cache-v2';

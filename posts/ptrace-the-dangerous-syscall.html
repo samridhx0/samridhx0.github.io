@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>ptrace: debuggers and rootkits - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">FEBRUARY 28, 2025 &nbsp;&nbsp; <span class="tag">SECURITY</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">PTRACE: THE SYSCALL THAT RUNS YOUR DEBUGGER AND YOUR ROOTKIT</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          <code>ptrace</code> is syscall 101 on x86_64 Linux. It gives one process — the tracer — direct access to another process's memory, registers, and system call stream. This is how <code>gdb</code> works. It's how <code>strace</code> works. It's also how a chunk of Linux process injection works.
+        </p>
+        <p>
+          Understanding ptrace is understanding a major attack surface. The same mechanism that lets you debug your code lets someone inject code into your running processes.
+        </p>
+
+        <h2>What ptrace actually does</h2>
+        <p>The API is a single syscall with a request enum and a target PID:</p>
+        <pre><code>#include &lt;sys/ptrace.h&gt;
+#include &lt;sys/wait.h&gt;
+
+// Attach to a running process
+ptrace(PTRACE_ATTACH, pid, NULL, NULL);
+waitpid(pid, NULL, 0);  // wait for the SIGSTOP delivery
+
+// Read a word from the tracee's address space
+long word = ptrace(PTRACE_PEEKDATA, pid, (void*)addr, NULL);
+
+// Write arbitrary bytes to the tracee's address space
+ptrace(PTRACE_POKEDATA, pid, (void*)addr, (void*)new_word);
+
+// Read the tracee's registers
+struct user_regs_struct regs;
+ptrace(PTRACE_GETREGS, pid, NULL, &regs);
+
+// Modify registers (e.g. change RIP to point at injected shellcode)
+regs.rip = (unsigned long long)target_addr;
+ptrace(PTRACE_SETREGS, pid, NULL, &regs);
+
+// Resume execution
+ptrace(PTRACE_CONT, pid, NULL, NULL);</code></pre>
+        <p>
+          That <code>PTRACE_POKEDATA</code> call writes arbitrary bytes to any address in the tracee's address space. Combined with <code>PTRACE_SETREGS</code> to redirect execution, you have process injection. No kernel exploit required. Just ptrace.
+        </p>
+
+        <h2>The injection recipe</h2>
+        <p>Classic Linux process injection with ptrace looks like this:</p>
+        <ol>
+          <li>Find a target process (something that runs as root, or something that has network access you want to abuse).</li>
+          <li>Call <code>PTRACE_ATTACH</code>. The target gets SIGSTOP and freezes.</li>
+          <li>Find a writable region in <code>/proc/PID/maps</code> — or use ptrace to call <code>mmap()</code> in the target to allocate new memory.</li>
+          <li>Write your shellcode with <code>PTRACE_POKEDATA</code> in word-sized chunks.</li>
+          <li>Save the original registers, set RIP to your shellcode, call <code>PTRACE_CONT</code>.</li>
+          <li>Wait for it to finish, restore original registers, detach.</li>
+        </ol>
+        <p>
+          The process in <code>ps</code> still shows the original name. The memory map will have an anonymous executable region if you mmap'd new space, but that's the only obvious artifact.
+        </p>
+
+        <h2>strace is just ptrace with extra formatting</h2>
+        <pre><code># Attach to a running nginx worker
+strace -p $(pgrep nginx | tail -1)
+
+# Trace with full argument strings
+strace -s 256 -p PID
+
+# Count syscalls (useful for performance work)
+strace -c -f ./mybinary</code></pre>
+        <p>
+          strace uses <code>PTRACE_SYSCALL</code> to stop the tracee at every syscall entry and exit, log the arguments, then resume. The overhead is real — a heavily traced process can slow down by 10-50x. Don't run strace on a production database and wonder why latency spiked.
+        </p>
+
+        <h2>Detecting whether a process is being traced</h2>
+        <pre><code>grep TracerPid /proc/TARGET_PID/status
+# TracerPid: 0      <- nothing attached
+# TracerPid: 2341   <- PID 2341 is tracing this process</code></pre>
+        <p>
+          Malware and CTF binaries use this to detect analysis:
+        </p>
+        <pre><code>// Anti-debug: PTRACE_TRACEME fails if already being traced
+if (ptrace(PTRACE_TRACEME, 0, 0, 0) == -1) {
+    // Someone attached before us, bail out
+    _exit(1);
+}</code></pre>
+        <p>This is a one-liner to bypass in gdb: <code>catch syscall ptrace</code> then set a return value override.</p>
+
+        <h2>YAMA ptrace_scope: the kernel-level restriction</h2>
+        <pre><code>cat /proc/sys/kernel/yama/ptrace_scope</code></pre>
+        <ul>
+          <li><strong>0</strong> — Any process can trace any other process with the same UID</li>
+          <li><strong>1</strong> — A process can only trace its own children (default on Ubuntu/Debian)</li>
+          <li><strong>2</strong> — Only processes with <code>CAP_SYS_PTRACE</code> can trace</li>
+          <li><strong>3</strong> — ptrace is completely disabled, no exceptions</li>
+        </ul>
+        <p>
+          Most desktop Linux distros ship with scope=1. This blocks the cross-process injection technique above unless you're running as root. Corporate hardened images often set scope=2 or 3.
+        </p>
+        <pre><code># Temporarily loosen (requires root)
+echo 0 > /proc/sys/kernel/yama/ptrace_scope
+
+# Persist across reboots
+echo "kernel.yama.ptrace_scope = 1" >> /etc/sysctl.d/10-ptrace.conf</code></pre>
+
+        <h2>seccomp can kill ptrace entirely</h2>
+        <p>
+          If a process drops the <code>ptrace</code> syscall from its seccomp whitelist, it can't be used as a tracer, and it can't be made into a tracee either (well, it can be attached to, but it can't call ptrace itself). Docker's default seccomp profile blocks ptrace — which is why you can't run <code>strace</code> inside a stock Docker container without <code>--cap-add SYS_PTRACE</code> or a custom seccomp profile.
+        </p>
+        <pre><code># This fails in a default Docker container
+docker run ubuntu strace ls
+# strace: ptrace(PTRACE_TRACEME, ...): Operation not permitted
+
+# This works
+docker run --cap-add SYS_PTRACE ubuntu strace ls</code></pre>
+
+        <h2>One practical defensive use</h2>
+        <p>
+          If you're writing a sandboxed process that runs untrusted code, you can use ptrace to intercept and filter syscalls from the child — essentially building a syscall policy enforcer in userspace. This is how some browser sandboxes worked before seccomp-bpf became standard. It's slower than seccomp and requires a dedicated tracer process, but it's more flexible for dynamic policy decisions.
+        </p>
+        <p>
+          Understanding ptrace is a prerequisite for understanding debuggers, sandboxes, malware injection, and container security. It's one of those syscalls that quietly touches everything.
+        </p>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

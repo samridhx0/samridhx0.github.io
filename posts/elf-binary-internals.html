@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>ELF binaries: what's actually in your executables - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">OCTOBER 18, 2024 &nbsp;&nbsp; <span class="tag">LINUX</span> &nbsp; <span class="tag">SECURITY</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">WHAT'S ACTUALLY INSIDE YOUR ELF BINARY (AND WHY MALWARE CARES)</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          Every executable on Linux is an ELF file. ELF stands for Executable and Linkable Format. It's a container format — it holds code, data, metadata, and the instructions the kernel and dynamic linker need to actually run the thing. Understanding it is prerequisite knowledge for binary exploitation, malware analysis, and making sense of tools like <code>objdump</code>, <code>readelf</code>, and <code>nm</code>.
+        </p>
+        <p>
+          The first four bytes of every ELF file are <code>7f 45 4c 46</code> — the ELF magic number. <code>45 4c 46</code> is ASCII for "ELF". Everything else follows from there.
+        </p>
+
+        <h2>The ELF header</h2>
+        <pre><code>readelf -h /bin/ls</code></pre>
+        <pre><code>ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+  Entry point address:               0x6aa0
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          136408 (bytes into file)
+  Number of section headers:         30
+  Section header string table index: 29</code></pre>
+        <p>
+          The important fields: <strong>Type</strong> (EXEC = fixed address, DYN = position-independent, meaning ASLR-compatible), <strong>Entry point</strong> (where execution begins — not <code>main()</code>, it's <code>_start</code> in the C runtime), and the offsets to program/section headers.
+        </p>
+
+        <h2>Sections vs segments</h2>
+        <p>
+          ELF has two views of the same binary: sections and segments. Sections are for linkers and debuggers. Segments (program headers) are for the kernel and dynamic linker at load time. They can overlap.
+        </p>
+        <pre><code># Sections (linker view)
+readelf -S /bin/ls | head -30
+
+# Segments (loader view)
+readelf -l /bin/ls</code></pre>
+        <p>Key sections:</p>
+        <ul>
+          <li><code>.text</code> — executable code. Read-only, executable.</li>
+          <li><code>.data</code> — initialized global variables. Read-write, not executable.</li>
+          <li><code>.bss</code> — uninitialized globals. Exists as metadata only (no disk space), zeroed at load time.</li>
+          <li><code>.rodata</code> — read-only data: string literals, constants.</li>
+          <li><code>.got</code> / <code>.plt</code> — Global Offset Table and Procedure Linkage Table: how dynamic linking works.</li>
+          <li><code>.dynamic</code> — information for the dynamic linker.</li>
+          <li><code>.symtab</code> / <code>.dynsym</code> — symbol tables (stripped in production binaries).</li>
+        </ul>
+
+        <h2>How dynamic linking works (and why GOT/PLT matters for exploits)</h2>
+        <p>
+          When your program calls <code>printf()</code>, it doesn't call the function directly. It calls a stub in the PLT (Procedure Linkage Table). The first time that stub is called, it triggers the dynamic linker to resolve the actual address of <code>printf</code> in libc and write it into the GOT (Global Offset Table). Subsequent calls go directly via the GOT entry.
+        </p>
+        <pre><code># See the PLT entries
+objdump -d /bin/cat | grep -A3 '@plt'
+
+# See what the GOT contains at runtime
+# (with gdb)
+gdb /bin/cat
+(gdb) break main
+(gdb) run
+(gdb) info address printf    # where printf resolves to
+(gdb) x/xg 0xGOT_ADDRESS    # what's in the GOT entry</code></pre>
+        <p>
+          Why this matters for security: the GOT is writable by default in older binaries. GOT overwrite attacks redirect function calls by writing a malicious address into a GOT entry. Modern mitigations like Full RELRO (<code>-Wl,-z,relro,-z,now</code>) make the GOT read-only after load time. Check whether a binary has it:
+        </p>
+        <pre><code>checksec --file=/bin/ls
+# or
+readelf -l /bin/ls | grep GNU_RELRO</code></pre>
+
+        <h2>What strings and symbols tell you</h2>
+        <pre><code># Extract printable strings from a binary
+strings /path/to/suspicious_binary | grep -E 'http|curl|bash|/bin|/tmp|passwd|shadow'
+
+# List exported/imported symbols
+nm -D /path/to/binary 2>/dev/null
+# U = undefined (imported), T = in .text (exported), W = weak symbol
+
+# Check which shared libraries it needs
+ldd /path/to/binary</code></pre>
+        <p>
+          Malware analysis starts here. Strings give you URLs, file paths, registry keys, suspicious function names. Symbol tables (if not stripped) tell you what the binary calls. <code>ldd</code> tells you its dependencies — a binary linked against <code>libcrypto.so</code> and nothing else is probably doing encryption and little else.
+        </p>
+
+        <h2>Checking binary hardening</h2>
+        <pre><code># checksec is the standard tool
+checksec --file=/bin/ls
+
+# Output:
+# RELRO:    Full RELRO       <- GOT is read-only after init
+# STACK:    Canary found     <- stack smashing protection
+# NX:       NX enabled       <- non-executable stack
+# PIE:      PIE enabled      <- ASLR-compatible
+# RPATH:    No RPATH         <- no hardcoded library path
+# Symbols:  No Symbols       <- stripped</code></pre>
+        <p>
+          This is a quick audit of what exploit mitigations a binary has. A binary with no RELRO, no canary, no NX, and no PIE is a binary from the 1990s security model. You still find them on embedded systems and old enterprise software.
+        </p>
+
+        <h2>ELF injection: how malware infects binaries</h2>
+        <p>
+          Because ELF is a structured format, you can modify it programmatically. ELF infectors work by:
+        </p>
+        <ol>
+          <li>Adding a new section (or extending an existing one) to hold shellcode.</li>
+          <li>Changing the entry point to point at the shellcode.</li>
+          <li>At the end of the shellcode, jumping to the original entry point.</li>
+        </ol>
+        <p>
+          The binary looks normal. <code>file</code> and <code>checksec</code> still report it as the original binary. It runs the original code after running yours.
+        </p>
+        <pre><code># Detect unusual section sizes or suspicious sections
+readelf -S /bin/ls | awk '{print $2, $6}' | sort -k2 -rn
+
+# Compare against a known-good copy
+sha256sum /bin/ls
+# Then compare with the package manager's expected hash:
+dpkg --verify ls 2>/dev/null   # Debian/Ubuntu
+rpm -V coreutils 2>/dev/null   # RHEL/Fedora</code></pre>
+        <p>
+          ELF is the container format for everything that runs natively on Linux. Reading it directly with <code>readelf</code> and <code>objdump</code> is a fundamental skill for malware analysis, binary exploitation, and hardening audits. Start with a binary you trust, learn what normal looks like, and anomalies become obvious.
+        </p>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

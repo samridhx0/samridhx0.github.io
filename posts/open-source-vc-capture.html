@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>Open source is eating itself - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+  .timeline-item { border-left: 3px solid currentColor; padding-left: 1.25rem; margin-bottom: 1.5rem; }
+  .timeline-year { font-family: monospace; font-size: 0.8rem; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 0.25rem; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">JANUARY 20, 2025 &nbsp;&nbsp; <span class="tag">OPEN SOURCE</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">OPEN SOURCE IS EATING ITSELF: THE VC CAPTURE PROBLEM</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          The original open source promise was radical: software that legally belonged to everyone. The GPL said if you distribute software, you distribute freedoms. The BSD crowd said do whatever you want. Linus Torvalds built a kernel and let the world modify it. For a while, this worked.
+        </p>
+        <p>
+          It's still working for some things. The Linux kernel is fine. PostgreSQL is fine. SQLite is fine. These projects have stable governance, corporate contributors who don't control the codebase, and communities that would fork overnight if someone tried to pull a fast one.
+        </p>
+        <p>
+          But a pattern has emerged with VC-backed "open source" companies that should make you skeptical every time you bet your infrastructure on a project with a commercial backer.
+        </p>
+
+        <h2>The pattern</h2>
+        <p>It goes like this:</p>
+        <ol>
+          <li>Release the software under a permissive license (Apache 2.0, BSD, MIT).</li>
+          <li>Build a community. Get developers to adopt it, contribute to it, write documentation, give talks at conferences.</li>
+          <li>Raise venture capital. Now you have payroll to meet and investors expecting returns.</li>
+          <li>Watch AWS/Azure/GCP offer your product as a managed service, monetizing your community's work without meaningfully contributing back.</li>
+          <li>Relicense to something that blocks cloud providers from competing.</li>
+        </ol>
+        <p>This is not a hypothetical. It has happened repeatedly.</p>
+
+        <h2>The cases</h2>
+
+        <div class="timeline-item">
+          <div class="timeline-year">MONGODB — 2018</div>
+          <p style="margin-bottom:0">
+            MongoDB switched from AGPL to the Server Side Public License (SSPL). The SSPL's key clause: if you offer MongoDB as a service, you must open-source the entire software stack used to provide that service — including your orchestration, monitoring, backups, everything. Designed specifically to be impossible for AWS to comply with. Result: MongoDB Inc. controls a database used by hundreds of thousands of developers who chose it under an open source license. Debian and Red Hat removed it from their package repos because SSPL is not considered open source by OSI.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">ELASTICSEARCH — 2021</div>
+          <p style="margin-bottom:0">
+            Elastic switched Elasticsearch and Kibana from Apache 2.0 to dual-license: Elastic License 2.0 and SSPL. The explicit reason stated by Elastic's CEO: Amazon was running "Amazon Elasticsearch Service" without contributing meaningfully. Amazon's response: fork it. They forked both Elasticsearch and Kibana into OpenSearch, kept it Apache 2.0, and most major cloud providers followed. Elastic lost control of the upstream narrative.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">HASHICORP / TERRAFORM — 2023</div>
+          <p style="margin-bottom:0">
+            HashiCorp switched Terraform from Mozilla Public License 2.0 to the Business Source License (BSL 1.1) in August 2023. BSL allows use but prohibits "competitive" use — specifically, you can't use BSL Terraform to build a product that competes with HashiCorp's commercial offerings. The community forked Terraform into OpenTofu within weeks. OpenTofu is now under the Linux Foundation. IBM acquired HashiCorp in 2024 for $6.4 billion.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">REDIS — 2024</div>
+          <p style="margin-bottom:0">
+            Redis Ltd. switched Redis from BSD to dual-license RSALv2 and SSPL. AWS had been running ElastiCache (Redis-compatible) at scale. The community response was immediate: the major cloud providers — AWS, Google, Oracle — forked Redis into Valkey under the Linux Foundation. Valkey is now BSD licensed. Redis lost the single most important asset it had: being the canonical in-memory data store everyone defaults to.
+          </p>
+        </div>
+
+        <h2>What SSPL and BSL actually are</h2>
+        <p>
+          Neither SSPL nor BSL is approved by the Open Source Initiative as an open source license. OSI's definition requires that the license not restrict fields of endeavor — you can't restrict commercial use, you can't restrict who runs it, you can't restrict what other software it gets bundled with.
+        </p>
+        <p>
+          SSPL and BSL both restrict specific use cases (competing services, combining with certain other software). They're source-available licenses — you can read the code, maybe modify it for internal use — but they're not open source in the traditional sense.
+        </p>
+        <p>
+          Calling them "open source" is marketing. Technically inaccurate marketing that confuses enterprises into thinking they're betting on something community-governed.
+        </p>
+
+        <h2>The counter-moves</h2>
+        <p>
+          The AGPL (GNU Affero General Public License) addresses the "software as a service" loophole that AWS exploits. AGPL requires that if you run modified AGPL software over a network, you must provide source to users of the service. Nextcloud, Mastodon, GitLab's core, and many other projects use it. AWS generally won't touch AGPL software, which is either a feature or a bug depending on your perspective.
+        </p>
+        <p>
+          The Functional Source License (FSL) is a newer approach: full commercial restrictions during the first two years, then the software becomes Apache 2.0 automatically. You get a runway to monetize before competitors can build managed services, but the community retains a guaranteed open source future.
+        </p>
+        <p>
+          Developer cooperatives: Gitea moved to a cooperative structure in 2022, where the commercial entity (Gitea Ltd.) is majority-owned by its contributors. No single corporate backer can unilaterally relicense.
+        </p>
+
+        <h2>What this means for your infrastructure choices</h2>
+        <p>
+          When evaluating open source infrastructure software, the license is only one dimension. Ask:</p>
+        <ul>
+          <li>Who owns the trademark? (Controls the brand even if the code is forked)</li>
+          <li>Who controls the primary repository?</li>
+          <li>What's the Contributor License Agreement — does it require copyright assignment to the company?</li>
+          <li>Who's funding this, and what's their exit strategy?</li>
+          <li>Is there a foundation (Apache, Linux Foundation, CNCF) or just a company with open code?</li>
+        </ul>
+        <p>
+          Projects where contributors sign CLAs assigning copyright to the company are one board vote away from relicensing. Projects under neutral foundations with distributed copyright are much harder to capture.
+        </p>
+        <p>
+          The technical quality and the governance structure are independent variables. A project can be technically excellent and still be a governance timebomb. Check both.
+        </p>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>iptables rules that survive reboots - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">NOVEMBER 20, 2024 &nbsp;&nbsp; <span class="tag">LINUX</span> &nbsp; <span class="tag">NETWORKING</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">WHY YOUR IPTABLES RULES DIE ON REBOOT (AND HOW TO FIX THAT FOREVER)</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          Every time your Linux box reboots, iptables starts clean. No rules. Your carefully constructed firewall from last week — gone. Your rate-limiting rules — gone. That DROP rule for the scanner that was hammering port 22 — gone.
+        </p>
+        <p>
+          This trips up a lot of people because everything seems fine right after you run <code>iptables -L</code>. The rules are there. They're working. Then the box reboots, and someone notices the firewall is wide open.
+        </p>
+        <p>
+          The kernel's netfilter module loads clean on boot. It doesn't save state anywhere by default. iptables rules live in kernel memory and have to be explicitly reloaded. Here's every way to handle this.
+        </p>
+
+        <h2>The basics: save and restore</h2>
+        <pre><code># Save IPv4 rules to a file
+iptables-save > /etc/iptables/rules.v4
+
+# Save IPv6 rules
+ip6tables-save > /etc/iptables/rules.v6
+
+# Restore them
+iptables-restore < /etc/iptables/rules.v4
+ip6tables-restore < /etc/iptables/rules.v6</code></pre>
+        <p>
+          Make the directory first if it doesn't exist: <code>mkdir -p /etc/iptables</code>.
+        </p>
+        <p>
+          <code>iptables-save</code> dumps all tables (filter, nat, mangle, raw) and all chains in a format that <code>iptables-restore</code> can replay exactly. It's the lowest-level persistence approach and it works on every distro.
+        </p>
+        <p>
+          The problem: it doesn't run automatically on boot unless you wire it up. Here's how to do that.
+        </p>
+
+        <h2>The package way (Debian / Ubuntu)</h2>
+        <pre><code>apt install iptables-persistent netfilter-persistent</code></pre>
+        <p>
+          During install, the package asks if you want to save your current rules. Say yes. Afterward, <code>netfilter-persistent</code> installs a systemd service that runs <code>iptables-restore</code> at boot from <code>/etc/iptables/rules.v4</code> and <code>/etc/iptables/rules.v6</code>.
+        </p>
+        <p>When you update your rules later, save them explicitly:</p>
+        <pre><code># Either of these works:
+netfilter-persistent save
+
+# Or manually:
+iptables-save > /etc/iptables/rules.v4</code></pre>
+
+        <h2>The systemd way (distro-agnostic)</h2>
+        <p>No package required. Works anywhere with systemd:</p>
+        <pre><code>mkdir -p /etc/iptables
+
+# Save your current rules first
+iptables-save > /etc/iptables/rules.v4
+ip6tables-save > /etc/iptables/rules.v6
+
+# Create the service unit
+cat > /etc/systemd/system/iptables-restore.service &lt;&lt;'EOF'
+[Unit]
+Description=Restore iptables rules
+Before=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/iptables-restore /etc/iptables/rules.v4
+ExecStart=/sbin/ip6tables-restore /etc/iptables/rules.v6
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable iptables-restore
+systemctl start iptables-restore</code></pre>
+        <p>
+          The <code>Before=network-pre.target</code> ensures your firewall rules load before any network interfaces come up. This closes the window where the box is briefly unprotected at boot.
+        </p>
+
+        <h2>The modern way: nftables</h2>
+        <p>
+          nftables replaced iptables as the standard in Linux 3.13 (2014). It's the default on Debian 10+, RHEL 8+, Ubuntu 20.04+, Arch, and most current distros. The big difference from a persistence standpoint: nftables rules live in <code>/etc/nftables.conf</code> and a systemd service loads them at boot automatically.
+        </p>
+        <pre><code># Check if nftables is already set up on your system
+systemctl status nftables
+cat /etc/nftables.conf</code></pre>
+        <p>A minimal nftables config that does what most people need:</p>
+        <pre><code>#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+    chain input {
+        type filter hook input priority 0; policy drop;
+
+        # Allow established and related connections
+        ct state established,related accept
+
+        # Allow loopback
+        iif lo accept
+
+        # Allow SSH, HTTP, HTTPS
+        tcp dport { 22, 80, 443 } accept
+
+        # Allow ICMP
+        icmp type echo-request accept
+        icmpv6 type echo-request accept
+    }
+
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+    }
+
+    chain output {
+        type filter hook output priority 0; policy accept;
+    }
+}</code></pre>
+        <pre><code># Apply and enable
+systemctl enable nftables
+systemctl start nftables
+
+# Test your rules without committing permanently
+nft -f /etc/nftables.conf
+
+# List current ruleset
+nft list ruleset</code></pre>
+        <p>
+          nftables has unified IPv4/IPv6 handling with the <code>inet</code> family, so one rule covers both. The syntax is cleaner and the tool supports atomic rule replacement — you swap the entire ruleset in one operation, no window where you're half-applied.
+        </p>
+
+        <h2>The RHEL/Fedora/CentOS way: firewalld</h2>
+        <pre><code># Add a service permanently
+firewall-cmd --permanent --add-service=http
+firewall-cmd --permanent --add-service=https
+
+# Add a specific port
+firewall-cmd --permanent --add-port=8080/tcp
+
+# Apply without dropping existing connections
+firewall-cmd --reload
+
+# See what's currently allowed
+firewall-cmd --list-all</code></pre>
+        <p>
+          <code>--permanent</code> writes to disk. Without it, changes are runtime-only and vanish on reboot. <code>--reload</code> applies the permanent rules without flushing existing connections. Firewalld manages zones, which lets you apply different rule sets to different network interfaces — useful on machines with a public interface and a private interface.
+        </p>
+
+        <h2>One critical gotcha with Docker</h2>
+        <p>
+          If you run Docker on the same machine as iptables, Docker injects its own iptables rules into the FORWARD chain and the nat table at startup. These rules are not in your saved ruleset. Every time Docker starts, it rewrites them.
+        </p>
+        <p>
+          This means your iptables-restore might overwrite Docker's rules, or Docker's rules might override yours, depending on timing. The interaction is messy. If you're running a Docker host, consider either using firewalld (which Docker has better support for) or accepting that Docker will manage those chains and only configure your INPUT rules manually.
+        </p>
+        <pre><code># See what Docker added to iptables
+iptables -t nat -L -n
+iptables -L DOCKER -n
+iptables -L DOCKER-USER -n  # This chain is yours — Docker won't touch it</code></pre>
+        <p>
+          <code>DOCKER-USER</code> is a chain Docker creates specifically for user-defined rules. Rules you add here persist across Docker restarts. Use it.
+        </p>
+
+        <h2>Which approach to pick</h2>
+        <ul>
+          <li>New Debian 10+/Ubuntu 20.04+ install with no existing iptables rules: go with nftables directly</li>
+          <li>Existing iptables setup you're maintaining: <code>iptables-persistent</code> or the systemd unit, until you have time to migrate</li>
+          <li>RHEL/CentOS/Fedora: firewalld, it's the distro-native tool and well-supported</li>
+          <li>Docker host: use the <code>DOCKER-USER</code> chain for your rules regardless of the outer tool</li>
+        </ul>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

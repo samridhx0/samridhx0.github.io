@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<meta http-equiv="X-Robots-Tag" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate"/>
+<title>Linux namespaces explained - Samridh Gaur</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#019863",
+          "background-light": "#f5f8f7",
+          "background-dark": "#0f231c",
+          "text-light": "#111111",
+          "text-dark": "#e5e7eb",
+          "text-secondary-light": "#6b7280",
+          "text-secondary-dark": "#9ca3af",
+          "border-light": "#e5e7eb",
+          "border-dark": "#2d2d2d"
+        },
+        fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" }
+      }
+    }
+  };
+</script>
+<style>
+  body { font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+  h1, h2, h3 { font-family: 'Arial Black', sans-serif; letter-spacing: -2px; }
+  .brutalist-border { border: 3px solid currentColor; }
+  .brutalist-link { text-decoration: none; color: currentColor; padding: 4px 0; position: relative; }
+  .brutalist-link::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 3px; bottom: -3px; left: 0; background-color: currentColor; transform-origin: bottom right; transition: transform 0.3s ease-out; }
+  .brutalist-link:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+  .brutalist-button { border: 3px solid currentColor; padding: 8px 16px; background-color: transparent; color: currentColor; transition: all 0.2s ease-in-out; }
+  .brutalist-button:hover { background-color: currentColor; color: var(--background-light); }
+  .dark .brutalist-button:hover { background-color: currentColor; color: var(--background-dark); }
+  .post-meta { font-family: monospace; }
+  .tag { font-family: monospace; font-size: 0.75rem; border: 2px solid currentColor; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .prose { font-family: 'Arial', sans-serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: -0.2px; font-weight: 400; }
+  .prose p { margin-bottom: 1.4rem; }
+  .prose h2 { font-family: 'Arial Black', sans-serif; font-size: 1.6rem; font-weight: 900; letter-spacing: -2px; margin-top: 2.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+  .prose h3 { font-family: 'Arial Black', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: -1.5px; margin-top: 2rem; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .prose ul { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: disc; }
+  .prose ol { margin-bottom: 1.4rem; padding-left: 1.5rem; list-style: decimal; }
+  .prose li { margin-bottom: 0.4rem; }
+  .prose code { font-family: 'Courier New', Courier, monospace; background: rgba(0,0,0,0.07); padding: 2px 6px; font-size: 0.88em; border-radius: 2px; }
+  .dark .prose code { background: rgba(255,255,255,0.1); }
+  .prose pre { font-family: 'Courier New', Courier, monospace; background: #111; color: #e5e7eb; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem; border: 3px solid currentColor; font-size: 0.875rem; line-height: 1.65; overflow-x: auto; }
+  .dark .prose pre { background: #0a0a0a; }
+  .prose pre code { background: none; padding: 0; font-size: inherit; }
+  .prose strong { font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -0.5px; }
+</style>
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white font-sans transition-colors duration-0">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <header class="flex flex-col items-center gap-6 sm:flex-row sm:justify-between sm:items-center mb-16 sm:mb-20">
+    <a class="text-xl font-bold brutalist-link" href="../index.html">samridh.com<span class="text-primary">~</span></a>
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-8">
+      <a class="text-xl brutalist-link" href="../index.html">home</a>
+      <a class="text-xl brutalist-link" href="../blog.html">blog</a>
+      <a class="text-xl brutalist-link" href="#">resume</a>
+      <button id="theme-toggle" class="text-black dark:text-white brutalist-button text-2xl p-2">
+        <span class="material-icons text-xl">wb_sunny</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <article>
+      <div class="mb-10">
+        <p class="post-meta text-sm mb-4">NOVEMBER 5, 2024 &nbsp;&nbsp; <span class="tag">LINUX</span> &nbsp; <span class="tag">CONTAINERS</span></p>
+        <h1 class="text-4xl sm:text-5xl uppercase font-bold leading-none mb-6">CONTAINERS ARE JUST LINUX NAMESPACES. HERE'S THE PROOF.</h1>
+      </div>
+
+      <div class="prose text-black dark:text-white">
+        <p>
+          Every time someone explains containers, they use a Docker command as the first example. That's the wrong starting point. Docker is a tool that automates container creation. The actual mechanism is Linux namespaces and cgroups — kernel features that have been around since 2002 and 2006 respectively.
+        </p>
+        <p>
+          You can create a functional container with a single command and no Docker installed. Here's how.
+        </p>
+
+        <h2>What namespaces are</h2>
+        <p>
+          A Linux namespace wraps a global resource and provides a process with an isolated view of it. Processes inside a namespace think they have the entire resource to themselves. From outside, you can see everything.
+        </p>
+        <p>There are 8 namespace types:</p>
+        <ul>
+          <li><strong>mnt</strong> — mount points (each process sees a different filesystem tree)</li>
+          <li><strong>pid</strong> — process IDs (PID 1 inside looks like PID 1, but it's some other PID on the host)</li>
+          <li><strong>net</strong> — network interfaces, routing tables, firewall rules</li>
+          <li><strong>ipc</strong> — System V IPC and POSIX message queues</li>
+          <li><strong>uts</strong> — hostname and NIS domain name</li>
+          <li><strong>user</strong> — user and group IDs (UID 0 inside maps to an unprivileged UID outside)</li>
+          <li><strong>cgroup</strong> — cgroup root (added in 4.6)</li>
+          <li><strong>time</strong> — system clock offsets per-namespace (added in 5.6)</li>
+        </ul>
+
+        <h2>Build a container by hand</h2>
+        <pre><code># Install debootstrap if needed
+apt install debootstrap
+
+# Create a minimal Debian root filesystem
+mkdir /tmp/mycontainer
+debootstrap --variant=minbase bookworm /tmp/mycontainer http://deb.debian.org/debian
+
+# Now launch a process with isolated namespaces
+unshare --mount --uts --ipc --net --pid --fork --user \
+    --map-root-user \
+    chroot /tmp/mycontainer /bin/bash</code></pre>
+        <p>
+          That's a container. No Docker. No containerd. Just <code>unshare</code> (a utility that calls the <code>unshare(2)</code> syscall) and <code>chroot</code> (which changes the root directory for a process).
+        </p>
+        <p>
+          The <code>--user --map-root-user</code> flags create a user namespace where your current unprivileged user maps to UID 0 inside. This is how rootless containers work.
+        </p>
+
+        <h2>Inspect namespaces with nsenter</h2>
+        <pre><code># See what namespaces a running process is in
+ls -la /proc/$(pgrep containerd | head -1)/ns/
+
+# Output:
+# lrwxrwxrwx ... cgroup -> cgroup:[4026531835]
+# lrwxrwxrwx ... ipc -> ipc:[4026531839]
+# lrwxrwxrwx ... mnt -> mnt:[4026531840]
+# lrwxrwxrwx ... net -> net:[4026531992]
+# lrwxrwxrwx ... pid -> pid:[4026531836]
+# ...
+
+# Enter a running container's namespaces
+# (equivalent to docker exec, but without Docker)
+nsenter --target PID_OF_CONTAINER_INIT --mount --pid --net --uts -- /bin/bash</code></pre>
+        <p>
+          Two processes share a namespace if and only if their namespace symlinks point to the same inode. That's it. That's the whole mechanism.
+        </p>
+
+        <h2>Network namespace in isolation</h2>
+        <pre><code># Create a named network namespace
+ip netns add myns
+
+# Run a command inside it
+ip netns exec myns ip addr show
+# Only shows lo — completely isolated from host networking
+
+# Create a veth pair (virtual ethernet cable between namespaces)
+ip link add veth0 type veth peer name veth1
+
+# Move one end into the namespace
+ip link set veth1 netns myns
+
+# Configure both ends
+ip addr add 10.0.0.1/24 dev veth0
+ip link set veth0 up
+
+ip netns exec myns ip addr add 10.0.0.2/24 dev veth1
+ip netns exec myns ip link set veth1 up
+ip netns exec myns ip link set lo up
+
+# Now ping from the namespace to the host
+ip netns exec myns ping 10.0.0.1</code></pre>
+        <p>
+          This is exactly what Docker does when it creates a bridge network. The <code>docker0</code> bridge interface on your host, the veth pairs that appear in <code>ip link show</code> with names like <code>veth3a5b1c2</code> — all of this is the same mechanism, automated.
+        </p>
+
+        <h2>cgroups: the resource limits half</h2>
+        <p>
+          Namespaces handle isolation (what a process can see). cgroups handle resource limits (how much a process can use). Together they make containers.
+        </p>
+        <pre><code># Create a cgroup (v2 syntax, modern systems)
+mkdir /sys/fs/cgroup/mygroup
+
+# Limit memory to 256MB
+echo "268435456" > /sys/fs/cgroup/mygroup/memory.max
+
+# Limit CPU to 50% of one core
+echo "50000 100000" > /sys/fs/cgroup/mygroup/cpu.max
+
+# Add a process to the cgroup
+echo $$ > /sys/fs/cgroup/mygroup/cgroup.procs
+
+# Now run something memory-hungry and watch it get killed
+python3 -c "x = bytearray(1024*1024*512)"
+# Killed</code></pre>
+
+        <h2>The container escape angle</h2>
+        <p>
+          Namespaces are only as strong as their configuration. Common weaknesses:
+        </p>
+        <ul>
+          <li>
+            <strong>No user namespace:</strong> if the container runs as real UID 0 (root on the host), any container escape gives you host root. Rootless containers with user namespaces isolate this.
+          </li>
+          <li>
+            <strong>Privileged containers:</strong> <code>docker run --privileged</code> disables most namespace isolation. The container can mount the host filesystem, load kernel modules, and manipulate host networking. This is a full security boundary bypass by design.
+          </li>
+          <li>
+            <strong>Shared PID namespace:</strong> <code>docker run --pid=host</code> shares the host's PID namespace. The container can see all host processes and ptrace them (if YAMA ptrace_scope allows).
+          </li>
+          <li>
+            <strong>Mounted Docker socket:</strong> <code>-v /var/run/docker.sock:/var/run/docker.sock</code> inside a container gives it full control over the Docker daemon, which runs as root. Classic container escape that doesn't require any kernel exploit.
+          </li>
+        </ul>
+        <pre><code># Check if you're in a container
+cat /proc/1/cgroup | grep docker
+ls /.dockerenv 2>/dev/null
+grep -q "container=lxc" /proc/1/environ 2>/dev/null &amp;&amp; echo "lxc container"</code></pre>
+        <p>
+          Containers are powerful and well-understood. Most container security incidents aren't kernel exploits — they're misconfiguration. Know the primitives and you know what the misconfigurations are exposing.
+        </p>
+      </div>
+    </article>
+
+    <div class="mt-16 pt-8" style="border-top: 3px solid currentColor;">
+      <a class="text-xl brutalist-link" href="../blog.html">← Back to Blog</a>
+    </div>
+  </main>
+
+  <footer class="mt-24 sm:mt-32 text-sm text-black dark:text-white flex flex-col items-center gap-3 text-center sm:text-left sm:flex-row sm:justify-between sm:items-center brutalist-border p-4">
+    <span class="uppercase">@sxmridhx0</span>
+    <span class="uppercase"><span class="material-icons text-base align-middle">lens</span> v1.0.0</span>
+  </footer>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const sunIcon = themeToggle.querySelector('span');
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      sunIcon.textContent = 'dark_mode';
+      themeToggle.style.color = 'black';
+      themeToggle.style.backgroundColor = 'white';
+      themeToggle.style.borderColor = 'black';
+      themeToggle.querySelector('span').style.color = 'black';
+    } else {
+      sunIcon.textContent = 'wb_sunny';
+      themeToggle.style.color = 'white';
+      themeToggle.style.backgroundColor = 'black';
+      themeToggle.style.borderColor = 'white';
+      themeToggle.querySelector('span').style.color = 'white';
+    }
+  });
+  if (document.documentElement.classList.contains('dark')) {
+    sunIcon.textContent = 'dark_mode';
+    themeToggle.style.color = 'black';
+    themeToggle.style.backgroundColor = 'white';
+    themeToggle.style.borderColor = 'black';
+    themeToggle.querySelector('span').style.color = 'black';
+  } else {
+    sunIcon.textContent = 'wb_sunny';
+    themeToggle.style.color = 'white';
+    themeToggle.style.backgroundColor = 'black';
+    themeToggle.style.borderColor = 'white';
+    themeToggle.querySelector('span').style.color = 'white';
+  }
+</script>
+</body>
+</html>

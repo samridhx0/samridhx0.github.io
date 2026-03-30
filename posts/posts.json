@@ -1,5 +1,68 @@
 [
-    {
+  {
+    "id": "ebpf-linux-observability",
+    "title": "eBPF is Changing Linux Observability and Most People Haven't Noticed",
+    "date": "2026-03-28",
+    "description": "The Linux kernel has a safe sandboxed programming environment built in. Cloudflare, Meta, and Google are using it. Here's what it is and how to start.",
+    "file": "ebpf-linux-observability.md"
+  },
+  {
+    "id": "writing-shellcode-is-still-fun",
+    "title": "Writing Shellcode in 2025 is Still Fun, Actually",
+    "date": "2026-03-25",
+    "description": "Shellcode is the hello world of understanding how programs talk to the OS at the metal. Let's write some.",
+    "file": "writing-shellcode-is-still-fun.md"
+  },
+  {
+    "id": "open-source-sustainability-problem",
+    "title": "Open Source Has a Sustainability Problem and We're All Pretending It Doesn't",
+    "date": "2026-03-20",
+    "description": "Log4Shell was maintained by volunteers. The dependency graph runs the world. Nobody is really paying for it.",
+    "file": "open-source-sustainability-problem.md"
+  },
+  {
+    "id": "tiling-wm-rabbit-hole",
+    "title": "Tiling Window Managers Will Ruin Normal Desktops For You",
+    "date": "2026-03-15",
+    "description": "i3, Sway, Hyprland, dwm - why keyboard-driven tiling WMs are addictive and how to get started without breaking everything.",
+    "file": "tiling-wm-rabbit-hole.md"
+  },
+  {
+    "id": "inotifywait-react-to-file-changes",
+    "title": "inotifywait: React to File Changes Without Polling Like a Caveman",
+    "date": "2026-03-10",
+    "description": "Stop checking if a file changed. Let the kernel tell you. inotifywait and the inotify API explained with real scripts.",
+    "file": "inotifywait-react-to-file-changes.md"
+  },
+  {
+    "id": "strace-your-new-best-friend",
+    "title": "strace: The Tool That Shows You Everything Your Program is Actually Doing",
+    "date": "2026-03-05",
+    "description": "When debugging fails and docs don't help, strace intercepts every syscall your program makes. Here's how to use it.",
+    "file": "strace-your-new-best-friend.md"
+  },
+  {
+    "id": "why-linux-over-windows-honest-take",
+    "title": "Windows is Fine. I Just Don't Want It.",
+    "date": "2026-02-28",
+    "description": "An honest look at why Linux wins for developers, security people, and anyone who wants to actually understand their computer.",
+    "file": "why-linux-over-windows-honest-take.md"
+  },
+  {
+    "id": "proc-filesystem-the-linux-secret",
+    "title": "/proc is Not a Directory, It's a Lie (a Useful Lie)",
+    "date": "2026-02-20",
+    "description": "The /proc filesystem exposes the kernel's internals as readable text files. Most Linux users never look at it. That's a shame.",
+    "file": "proc-filesystem-the-linux-secret.md"
+  },
+  {
+    "id": "ssh-config-tricks-you-arent-using",
+    "title": "Your SSH Config File is Just Sitting There Doing Nothing",
+    "date": "2026-02-15",
+    "description": "Jump hosts, connection multiplexing, dynamic SOCKS proxies - your ~/.ssh/config can do all of this and you're probably not using any of it.",
+    "file": "ssh-config-tricks-you-arent-using.md"
+  },
+  {
     "id": "how-to-find-failed-login-attempts-in-linux",
     "title": "How to find Failed Login Attempts in Linux?",
     "date": "2025-12-17",

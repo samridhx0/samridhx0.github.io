@@ -8,7 +8,7 @@
     <meta http-equiv="Expires" content="0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥬</text></svg>">
-    <title>Samridh Gaur</title>
+    <title>Contact - Samridh Gaur</title>
     <style>
         @font-face {
             font-family: 'Geist Mono';
@@ -186,52 +186,7 @@
         </nav>
     </header>
 
-    <h1>Samridh Gaur</h1>
-    <p><strong>AI + Security Enthusiast</strong></p>
-
-    <p>Passionate about learning, building products and strategies in emerging technologies.</p>
-    <p>AppSec Associate @TaskUs</p>
-
-    <h2>Latest Post</h2>
-    <div id="latest-post">Loading...</div>
-
-    <h2>Projects</h2>
-
-    <h3><a href="https://irisviewer.com" target="_blank" rel="noopener noreferrer">Iris Viewer</a></h3>
-    <p>Hardware-accelerated media viewer built in Rust. Drag in images and videos from multiple folders and browse them together in one live grid that updates as the library grows. Auto-detects the GPU to speed up indexing, with multi-threaded CPU indexing for large libraries, and jumps straight to any file's location on disk. Available for Windows.</p>
-
-    <h3><a href="https://talkativelogs.onrender.com" target="_blank" rel="noopener noreferrer">Talkative Logs</a></h3>
-    <p>Copilot-style log assistant with function-calling + RAG (LangChain + FAISS) to answer queries over uploaded docs/logs. Designed prompts, grounding, guardrails, and monitoring for response time and token costs; improved latency via streaming and smaller context windows.</p>
-
-    <h3><a href="https://github.com/samridhx0/PURRRGE" target="_blank" rel="noopener noreferrer">PURRRGE</a></h3>
-    <p>Secure deletion, cleaning free space, and zeroing disks - safer and more discoverable - while preserving the full power of the SDelete CLI.</p>
-
-    <h3><a href="https://github.com/samridhx0/adb-plus" target="_blank" rel="noopener noreferrer">Adb-Plus</a></h3>
-    <p>Streamlines everyday Android workflows: manage apps, run shell commands, launch screen mirroring (scrcpy), and generate forensic-style snapshots for triage and documentation.</p>
-
-    <h3><a href="#" onclick="showCyTriageModal(event)">CyTriage Malware Forensics Tool</a></h3>
-    <p>Cross-platform static analysis for HDD/SSD images, raw imaging, and OS-based workflows. Adheres to proper Chain-of-Custody.</p>
-
-    <div id="cytriage-modal" class="modal" onclick="closeModalOnBackdrop(event)">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeCyTriageModal()">&times;</button>
-            <h2>CyTriage Malware Forensics Tool</h2>
-            <div class="modal-images">
-                <img src="images/front.png" alt="CyTriage Screenshot 1">
-            </div>
-        </div>
-    </div>
-
-    <h2>Papers</h2>
-    <p><em>Amity Business School</em></p>
-
-    <h3>Emergency vs. Non-Emergency Vehicle Classifier</h3>
-    <p>Deep learning classifier leveraging Grad-CAMs to distinguish emergency vs. non-emergency vehicles.</p>
-
-    <h3>Deep Psychographics in Marketing</h3>
-    <p>Research on using the OCEAN (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) model to enhance consumer engagement and targeting strategies.</p>
-
-    <h2 id="contact">Contact</h2>
+    <h1 id="contact">Contact</h1>
     <p>Feel free to reach out. I'm always open to new ideas and collaborations.</p>
     <p>Email: <a href="mailto:samridh.gaur@outlook.com">samridh.gaur@outlook.com</a></p>
     <p>
@@ -247,56 +202,6 @@
     </footer>
 
     <script>
-        // CyTriage modal functions
-        function showCyTriageModal(e) {
-            e.preventDefault();
-            document.getElementById('cytriage-modal').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeCyTriageModal() {
-            document.getElementById('cytriage-modal').classList.remove('show');
-            document.body.style.overflow = '';
-        }
-        
-        function closeModalOnBackdrop(e) {
-            if (e.target.id === 'cytriage-modal') {
-                closeCyTriageModal();
-            }
-        }
-        
-        // Close modal on Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeCyTriageModal();
-            }
-        });
-        
-        // Fetch latest markdown post
-        (function() {
-            const container = document.getElementById('latest-post');
-            
-            fetch('posts/posts.json')
-                .then(r => r.json())
-                .then(posts => {
-                    // Sort by date (newest first)
-                    const sortedPosts = posts.sort((a, b) => {
-                        return new Date(b.date) - new Date(a.date);
-                    });
-                    
-                    if (sortedPosts.length > 0) {
-                        const latest = sortedPosts[0];
-                        container.innerHTML = `<p><a href="blog.html?post=${latest.id}">${latest.title}</a></p>`;
-                    } else {
-                        container.innerHTML = '<p>No posts yet.</p>';
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    container.innerHTML = '<p><a href="blog.html">View blog</a></p>';
-                });
-        })();
-        
         function toggleTheme() {
             const body = document.body;
             const currentTheme = body.classList.contains('black') ? 'black' : 

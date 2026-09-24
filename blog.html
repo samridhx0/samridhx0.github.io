@@ -418,7 +418,8 @@
             }
         }
         // Load saved theme
-        const savedTheme = localStorage.getItem('theme');
+        // Default to blue dark mode when no theme has been saved
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'dark') {
             document.body.classList.add('dark');
         } else if (savedTheme === 'black') {
